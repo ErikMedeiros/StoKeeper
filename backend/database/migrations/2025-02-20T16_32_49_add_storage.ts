@@ -1,8 +1,6 @@
-/** 
- * @param {import('kysely').Kysely} db
- * @returns {Promise<void>}
- */ 
-export async function up(db) {
+import { Kysely } from "kysely"
+
+export async function up(db: Kysely<any>) {
   await db.schema
     .createTable('storage')
     .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement())
@@ -12,10 +10,6 @@ export async function up(db) {
     .execute()
 }
 
-/** 
- * @param {import('kysely').Kysely} db
- * @returns {Promise<void>}
- */ 
-export async function down(db) {
+export async function down(db: Kysely<any>) {
   await db.schema.dropTable('storage').execute()
 }
