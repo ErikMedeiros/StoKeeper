@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body id="login__page">
+  <div class="login-container">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <label for="username">Usuário</label>
+      <input type="text" id="username" required />
+
+      <label for="password">Senha</label>
+      <input type="password" id="password" required />
+
+      <button type="submit">Entrar</button>
+    </form>
+  </div>
+
+  <div class="register-container">
+    <h2>Cadastro de Usuário</h2>
+    <form id="registerForm">
+      <label for="newUsername">Novo Usuário</label>
+      <input type="text" id="newUsername" required />
+
+      <label for="newPassword">Senha</label>
+      <input type="password" id="newPassword" required />
+
+      <label for="isAdmin">Admin</label>
+      <input type="checkbox" id="isAdmin" required />
+
+      <button type="button" onclick="registerUser()">Cadastrar</button>
+    </form>
+  </div>
+
+  <script>
+    const URL = "http://localhost:5000";
+
+    function registerUser() {
+      const username = document.getElementById('newUsername').value;
+      const password = document.getElementById('newPassword').value;
+      const isAdmin = document.getElementById('isAdmin').checked;
+
+      if (username && password) {
+        fetch(`${URL}/employee`, {
+          method: "POST",
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            username,
+            password, 
+            isAdmin,
+            name: username,
+            position: "Informe o cargo aqui",
+            salary: 0,
+          }),
+        })
+        .then(() => alert('Usuário cadastrado com sucesso!'));
+      } else {
+        alert('Preencha todos os campos!');
+      }
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      fetch(`${URL}/employee/${username}/${password}`)
+      .then((res) => res.json())
+      .then(({ login }) => {
+        if(login) {
+          alert('Login bem-sucedido!');
+          window.location.href = 'storage.html';
+        } else {
+          alert("Credenciais incorretas");
+        }
+      })
+    });
+  </script>
+</body>
+
+</html>
