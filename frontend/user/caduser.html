@@ -1,28 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
-  <link rel="stylesheet" href="index.css">
+  <title>Cadastro de Usuário</title>
+  <link rel="stylesheet" href="caduser.css">
 </head>
 
-<body id="login__page">
-  <div class="login-container">
-    <h2>Login</h2>
-    <form id="loginForm">
-      <label for="username">Usuário</label>
-      <input type="text" id="username" required />
-
-      <label for="password">Senha</label>
-      <input type="password" id="password" required />
-
-      <button type="submit">Entrar</button>
-    </form>
-  </div>
-
+<body id="cadastro__page">
   <div class="register-container">
     <h2>Cadastro de Usuário</h2>
     <form id="registerForm">
@@ -33,10 +20,11 @@
       <input type="password" id="newPassword" required />
 
       <label for="isAdmin">Admin</label>
-      <input type="checkbox" id="isAdmin" required />
+      <input type="checkbox" id="isAdmin" />
 
-      <button type="button" onclick="registerUser()">Cadastrar</button>
+      <button type="button" class="button-64" onclick="registerUser()"><span class="text">Cadastrar</span></button>
     </form>
+    <p>Já tem uma conta? <a href="index.html">Faça login</a></p>
   </div>
 
   <script>
@@ -60,28 +48,12 @@
             salary: 0,
           }),
         })
-        .then(() => alert('Usuário cadastrado com sucesso!'));
+        .then(() => alert('Usuário cadastrado com sucesso!'))
+        .catch(() => alert('Erro ao cadastrar usuário.'));
       } else {
         alert('Preencha todos os campos!');
       }
     }
-
-    document.getElementById('loginForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
-
-      fetch(`${URL}/employee/${username}/${password}`)
-      .then((res) => res.json())
-      .then(({ login }) => {
-        if(login) {
-          alert('Login bem-sucedido!');
-          window.location.href = 'storage/storage.html';
-        } else {
-          alert("Credenciais incorretas");
-        }
-      })
-    });
   </script>
 </body>
 
