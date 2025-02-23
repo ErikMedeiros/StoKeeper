@@ -37,16 +37,10 @@ function insertItem(item, index) {
   tr.id = `storage-${item.id}` 
 
   tr.innerHTML = `
-    <td>${item.productName}</td>
+    <td>${item.productName}  <button onclick="openModal(${index})"><i class='bx bx-edit' ></i></button></td>
     <td>${item.quantity}</td>
     <td>R$ ${item.unitPrice}</td>
     <td>R$ ${(item.quantity * item.unitPrice).toFixed(2)}</td>
-    <td class="acao">
-      <button onclick="openModal(${index})"><i class='bx bx-edit' ></i></button>
-    </td>
-    <td class="acao">
-      <button onclick="openModal(${index})"><i class='bx bx-trash'></i></button>
-    </td>
   `
   tbody.appendChild(tr)
 }

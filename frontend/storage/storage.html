@@ -23,11 +23,9 @@
         <thead>
           <tr>
             <th>Produto</th>
+            <th>Descrição</th>
             <th>Quantidade</th>
-            <th>Valor Unitário</th>
-            <th>Valor Total</th>
-            <th class="acao">Editar</th>
-            <th class="acao">Excluir</th>
+            <th>Valor Unitário (Média) </th>
           </tr>
         </thead>
         <tbody>
@@ -41,20 +39,25 @@
           <label for="m-product-name">Produto</label>
           <input id="m-product-name" type="text" required />
   
-          <label for="m-quantity">Quantidade</label>
+          <label for="m-quantity">Descrição</label>
           <input id="m-quantity" type="number" required />
   
-          <label for="m-unit-price">Valor Unitário</label>
-          <input id="m-unit-price" type="number" required />
+          <label for="m-unit-price">Categoria</label> <br>
+
+          <select name="select">
+            <option value="valor1">Valor 1</option>
+            <option value="valor2">Valor 2</option>
+            <option value="valor3">Valor 3</option>
+          </select>
           <button id="btnSalvar">Salvar</button>
         </form>
       </div>
     </div>
   </div>
-
+  
   <script>
     function redirectToEmployee() {
-      window.location.href = 'employee/employee.html';
+      window.location.href = '/frontend/employee/employee.html';
     }
   </script>
   
