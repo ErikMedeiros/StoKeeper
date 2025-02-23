@@ -85,42 +85,42 @@ app.get("/employees", async (_, response) => {
     response.send(result);
 });
 
-app.post("/storage", async (request, response) => {
-    const { productName, quantity, unitPrice  } = request.body;
+app.post("/product", async (request, response) => {
+    const { name, description } = request.body;
 
     try {
-        const storage = await db.insertInto("storage")
-            .values({ productName, quantity, unitPrice })
+        const product = await db.insertInto("product")
+            .values({ name, description })
             .returning("id")
             .executeTakeFirstOrThrow();
 
-        response.send({ storageId: storage.id });
+        response.send({ productId: product.id });
     } catch(error) {
-        const message = "erro ao criar um item no armazem"
+        const message = "erro ao criar um produto"
         response.status(500).send({ message });
     }
 });
 
-app.put("/storage/:id", async (request, response) => {
+app.put("/prodcut/:id", async (request, response) => {
     const id = request.params.id;
-    const { productName, quantity, unitPrice  } = request.body;
+    const { name, description } = request.body;
 
     try {
-        const storage = await db.updateTable("storage")
+        const product = await db.updateTable("product")
             .where("id", "=", +id)
-            .set({ productName, quantity, unitPrice })
+            .set({ name, description })
             .returning("id")
             .executeTakeFirstOrThrow();
 
-        response.send({ storageId: storage.id });
+        response.send({ productId: product.id });
     } catch(error) {
-        const message = "erro ao atualizar um item do armazem"
+        const message = "erro ao atualizar o produto"
         response.status(500).send({ message });
     }
 });
 
-app.get("/storages", async (_, response) => {
-    const result = await db.selectFrom("storage")
+app.get("/products", async (_, response) => {
+    const result = await db.selectFrom("product")
         .selectAll()
         .execute()
 

@@ -1,4 +1,5 @@
 import type {
+    ColumnType,
     Generated,
     Insertable,
     Selectable,
@@ -9,7 +10,8 @@ import SQLite from 'better-sqlite3';
 
 export type Database = {
     employee: EmployeeTable,
-    storage: StorageTable,
+    product: ProductTable,
+    movement: MovementTable,
 };
 
 export type EmployeeTable = {
@@ -26,16 +28,28 @@ export type Employee = Selectable<EmployeeTable>;
 export type CreateEmployee = Insertable<EmployeeTable>;
 export type UpdateEmployee = Updateable<EmployeeTable>;
 
-export type StorageTable = {
+export type ProductTable = {
     id: Generated<number>
-    productName: string,
-    quantity: number,
-    unitPrice: number,
+    name: string,
+    description: string,
 }
 
-export type Storage = Selectable<StorageTable>;
-export type CreateStorage = Insertable<StorageTable>;
-export type UpdateStorage = Updateable<StorageTable>;
+export type Product = Selectable<ProductTable>;
+export type CreateProduct = Insertable<ProductTable>;
+
+export type MovementTable = {
+    id: Generated<number>
+    productId: number,
+    employeeId: number,
+    type: "entrada" | "saida",
+    quantity: number,
+    unitPrice: number,
+    registeredAt: ColumnType<number, never, never>,
+}
+
+export type Movement = Selectable<MovementTable>;
+export type CreateMovement = Insertable<MovementTable>;
+export type UpdateMovement = Updateable<MovementTable>;
 
 const dialect = new SqliteDialect({
     database: new SQLite('./database.db')
