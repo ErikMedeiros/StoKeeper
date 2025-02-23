@@ -46,7 +46,9 @@ router.get("/", async (request, response) => {
     if (!!categoryId) query = query.where("categoryId", "=", +categoryId)
 
     const result = await query
+        .innerJoin("category", "category.id", "product.categoryId")
         .selectAll()
+        .select("category.name as categoryName")
         .execute()
 
     response.send(result);
