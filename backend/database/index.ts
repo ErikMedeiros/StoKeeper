@@ -11,7 +11,7 @@ import SQLite from 'better-sqlite3';
 export type Database = {
     employee: EmployeeTable,
     product: ProductTable,
-    movement: MovementTable,
+    movements: MovementTable,
 };
 
 export type EmployeeTable = {
@@ -44,7 +44,7 @@ export type MovementTable = {
     type: "entrada" | "saida",
     quantity: number,
     unitPrice: number,
-    registeredAt: ColumnType<number, never, never>,
+    registeredAt: ColumnType<number, number, never>,
 }
 
 export type Movement = Selectable<MovementTable>;
