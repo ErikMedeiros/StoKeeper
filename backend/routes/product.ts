@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { db } from "../database/index.js";
+import { sql } from "kysely";
 
 const router = Router();
 
@@ -37,8 +38,14 @@ router.put("/:id", async (request, response) => {
     }
 });
 
-router.get("/", async (_, response) => {
-    const result = await db.selectFrom("product")
+router.get("/", async (request, response) => {
+    const { name, categoryId } = request.query;
+
+    let query = db.selectFrom("product");
+    if (!!name) query = query.where(sql`lower(name)`, "like", sql`%lower('${name}')%`)
+    if (!!categoryId) query = query.where("categoryId", "=", +categoryId)
+
+    const result = await query
         .selectAll()
         .execute()
 
