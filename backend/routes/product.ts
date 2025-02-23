@@ -4,11 +4,11 @@ import { db } from "../database/index.js";
 const router = Router();
 
 router.post("/", async (request, response) => {
-    const { name, description } = request.body;
+    const { name, description, categoryId } = request.body;
 
     try {
         const product = await db.insertInto("product")
-            .values({ name, description })
+            .values({ name, description, categoryId })
             .returning("id")
             .executeTakeFirstOrThrow();
 

@@ -11,6 +11,7 @@ import SQLite from 'better-sqlite3';
 export type Database = {
     employee: EmployeeTable,
     product: ProductTable,
+    category: CategoryTable,
     movements: MovementTable,
 };
 
@@ -30,12 +31,23 @@ export type UpdateEmployee = Updateable<EmployeeTable>;
 
 export type ProductTable = {
     id: Generated<number>
+    categoryId: number,
     name: string,
     description: string,
 }
 
 export type Product = Selectable<ProductTable>;
 export type CreateProduct = Insertable<ProductTable>;
+export type UpdateProduct = Updateable<ProductTable>;
+
+export type CategoryTable = {
+    id: Generated<number>
+    name: string,
+}
+
+export type Category = Selectable<CategoryTable>;
+export type CreateCategory = Insertable<CategoryTable>;
+export type UpdateCategory = Updateable<CategoryTable>;
 
 export type MovementTable = {
     id: Generated<number>
