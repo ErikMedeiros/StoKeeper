@@ -61,14 +61,16 @@ button {
   font-weight: 600;
   letter-spacing: 2px;
   background: transparent;
-  color: #fff;
+  color: rgb(61, 106, 255);
   overflow: hidden;
   box-shadow: 0 0 0 0 transparent;
   transition: all 0.2s ease-in;
+  width: 100%;
 }
 
 button:hover {
   background: rgb(61, 106, 255);
+  color: #fff;
   box-shadow: 0 0 30px 5px rgba(0, 142, 236, 0.815);
   transition: all 0.2s ease-out;
 }
