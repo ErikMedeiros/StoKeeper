@@ -125,11 +125,15 @@ tbody tr td.acao {
     width: auto!important;
   }
   
-  td button i {
+  td i {
     font-size: 20px!important;
   }
 
-  td button i:first-child {
+  td i {
+    font-size: 20px!important;
+  }
+
+  td i:first-child {
     margin-right: 0;
   }
 
@@ -218,11 +222,11 @@ td button {
   background: transparent;
 }
 
-td button i {
+td i {
   font-size: 25px;
 }
 
-td button i:first-child {
+td i:first-child {
   margin-right: 10px;
 }
 

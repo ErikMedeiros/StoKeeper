@@ -6,8 +6,6 @@ const sProductName = document.querySelector('#m-product-name')
 const sQuantity = document.querySelector('#m-quantity')
 const sUnitPrice = document.querySelector('#m-unit-price')
 
-const URL = "http://localhost:5000";
-
 let itens
 let id
 
@@ -79,13 +77,13 @@ async function loadItens() {
 }
 
 async function getAllStorages () {
-  const result = await fetch(`${URL}/storages`);
+  const result = await fetch(`${URL}/product`);
   const data = await result.json();
   return data || [];
 }
 
 async function createStorage(item) {
-  await fetch(`${URL}/storage`, {
+  await fetch(`${URL}/product`, {
     method: "POST",
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify(item)
@@ -93,7 +91,7 @@ async function createStorage(item) {
 }
 
 async function updateStorage(id, item) {
-  await fetch(`${URL}/storage/${id}`, {
+  await fetch(`${URL}/product/${id}`, {
     method: "PUT",
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify(item)

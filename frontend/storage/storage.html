@@ -15,7 +15,8 @@
     <div class="header">
       <span>Gerenciamento de Estoque</span>
       <button onclick="openModal()" id="new">Incluir</button>
-      <button onclick="redirectToEmployee()" id="login">Funcionários</button>
+      <button id="employee" style="display: none;" onclick="redirectToEmployee()" id="login">Funcionários</button>
+      <button onclick="logout('../index.html')">Sair</button>
     </div>
 
     <div class="divTable">
@@ -55,7 +56,17 @@
     </div>
   </div>
   
+  <script src="../index.js"></script>
+  
   <script>
+    isAdmin().then((value) => {
+      if (value) {
+        /** @type {HTMLButtonElement} */
+        const button = document.querySelector("#employee")
+        button.style.display = "initial";
+      }
+    })
+
     function redirectToEmployee() {
       window.location.href = '../employee/employee.html';
     }

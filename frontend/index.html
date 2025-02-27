@@ -24,6 +24,10 @@
   </div>
 
   <script>
+    if (!!localStorage.getItem("token")) {
+      window.location.href = "./storage/storage.html";
+    } 
+
     const URL = "http://localhost:5000";
 
     document.getElementById('loginForm').addEventListener('submit', function(event) {
@@ -31,12 +35,13 @@
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
 
-      fetch(`${URL}/employee/${username}/${password}`)
+      fetch(`${URL}/employee/login?username=${username}&password=${password}`)
       .then((res) => res.json())
-      .then(({ login }) => {
-        if (login) {
+      .then(({ userId }) => {
+        if (userId) {
           alert('Login bem-sucedido!');
-          window.location.href = 'storage/storage.html';
+          localStorage.setItem("token", userId.toString());
+          window.location.href = './storage/storage.html';
         } else {
           alert("Credenciais incorretas");
         }

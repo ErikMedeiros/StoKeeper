@@ -5,8 +5,6 @@ const sFuncao = document.querySelector('#m-funcao')
 const sSalario = document.querySelector('#m-salario')
 const btnSalvar = document.querySelector('#btnSalvar')
 
-const URL = "http://localhost:5000";
-
 let itens
 let id
 
@@ -40,6 +38,9 @@ function insertItem(item, index) {
     <td>${item.name}</td>
     <td>${item.position}</td>
     <td>R$ ${item.salary}</td>
+    <td class="acao">
+      ${!!item.isAdmin ? "<i class='bx bx-user-check'></i>" : "<i class='bx bx-user-x' ></i>"}
+    </td>
     <td class="acao">
       <button onclick="openModal(${index})"><i class='bx bx-edit' ></i></button>
     </td>
@@ -79,7 +80,7 @@ async function loadItens() {
 }
 
 async function getAllEmployees () {
-  const result = await fetch(`${URL}/employees`);
+  const result = await fetch(`${URL}/employee`);
   const data = await result.json();
   return data || [];
 }

@@ -22,13 +22,20 @@
       <label for="isAdmin">Admin</label>
       <input type="checkbox" id="isAdmin" />
 
-      <button type="button" class="button-64" onclick="registerUser()"><span class="text">Cadastrar</span></button>
+      <button type="button" class="button-64" onclick="registerUser()">
+        <span class="text">Cadastrar</span>
+      </button>
     </form>
     <p>Já tem uma conta? <a href="../index.html">Faça login</a></p>
   </div>
 
+  <script src="../index.js"></script>
+
   <script>
-    const URL = "http://localhost:5000";
+    isAdmin().then((value) => {
+      if (value) document.querySelector("button").disabled = false;
+      else window.location.href = "../index.html";
+    })
 
     function registerUser() {
       const username = document.getElementById('newUsername').value;
@@ -48,7 +55,10 @@
             salary: 0,
           }),
         })
-        .then(() => alert('Usuário cadastrado com sucesso!'))
+        .then(({ ok }) => { 
+          if (ok) alert('Usuário cadastrado com sucesso!')
+          else throw new Error();
+        })
         .catch(() => alert('Erro ao cadastrar usuário.'));
       } else {
         alert('Preencha todos os campos!');

@@ -14,7 +14,7 @@ router.post("/", async (request, response) => {
             .executeTakeFirst();
 
         if (!!existing) {
-            response.send({ message: "login já utilizado" });
+            response.status(500).send({ message: "login já utilizado" });
             return;
         }
 
@@ -22,7 +22,7 @@ router.post("/", async (request, response) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         const employee = await db.insertInto("employee")
-            .values({ username, name, position, salary, isAdmin: isAdmin === 'true' ? 1 : 0, password: hashedPassword })
+            .values({ username, name, position, salary, isAdmin: isAdmin ? 1 : 0, password: hashedPassword })
             .returning('id')
             .executeTakeFirstOrThrow()
 
@@ -51,18 +51,32 @@ router.put("/:id", async (request, response) => {
     }
 });
 
-router.get("/:username/:password", async (request, response) => {
-    const { username, password } = request.params;
+router.get("/admin/:id", async (request, response) => {
+    const id = request.params.id;
+
+    try {
+        const employee = await db.selectFrom("employee")
+            .where("id", '=', +id)
+            .select("isAdmin")
+            .executeTakeFirstOrThrow()
+
+        response.send({ isAdmin: employee.isAdmin == 1 });
+    } catch (error) {
+        response.send({ isAdmin: false })
+    }
+});
+
+router.get("/login", async (request, response) => {
+    const { username, password } = request.query;
 
     try {
         const user = await db.selectFrom("employee")
-            .where('name', '=', username)
-            .select('password')
+            .where('name', '=', username!.toString())
+            .select(['password', 'id'])
             .executeTakeFirstOrThrow();
 
-        const match = await bcrypt.compare(password, user.password);
-        
-        response.send({ login: match });
+        const match = await bcrypt.compare(password!.toString(), user.password);
+        response.send({ userId: match ? user.id : null });
     } catch(error) {
         const message = "login e/ou senha incorreta"
         response.status(500).send({ message });

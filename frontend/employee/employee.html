@@ -16,6 +16,8 @@
       <span>Cadastro de Funcionários</span>
       <!-- <button onclick="openModal()" id="new">Incluir</button> -->
       <button onclick="redirectToStorage()" id="storage">Estoque</button>
+      <button onclick="redirectToUser()" id="storage">Cadastrar Funcionário</button>
+      <button onclick="logout('../index.html')">Sair</button>
     </div>
 
     <div class="divTable">
@@ -25,6 +27,7 @@
             <th>Nome</th>
             <th>Função</th>
             <th>Salário</th>
+            <th class="acao">Admin</th>
             <th class="acao">Editar</th>
             <th class="acao">Excluir</th>
           </tr>
@@ -51,9 +54,20 @@
     </div>
   </div>
 
-  <script>
+  <script src="../index.js"></script>
+
+  <script>    
+    isAdmin().then((value) => {
+      if (value) document.querySelector("button").disabled = false;
+      else window.location.href = "../index.html";
+    })
+
     function redirectToStorage() {
       window.location.href = '../storage/storage.html';
+    }
+
+    function redirectToUser() {
+      window.location.href = "../user/caduser.html";
     }
   </script>
   
