@@ -7,14 +7,17 @@ const router = Router();
 router.post("/", async (request, response) => {
     const { name, description, categoryId } = request.body;
 
+    console.log(name, description, categoryId);
+
     try {
         const product = await db.insertInto("product")
-            .values({ name, description, categoryId })
+            .values({ name, description, categoryId: +categoryId })
             .returning("id")
             .executeTakeFirstOrThrow();
 
         response.send({ productId: product.id });
     } catch(error) {
+        console.error(error)
         const message = "erro ao criar um produto"
         response.status(500).send({ message });
     }
@@ -47,8 +50,15 @@ router.get("/", async (request, response) => {
 
     const result = await query
         .innerJoin("category", "category.id", "product.categoryId")
-        .selectAll()
-        .select("category.name as categoryName")
+        .leftJoin('movements', "movements.productId", "product.id")
+        .select([
+            'product.id', 
+            'product.name', 
+            'product.description', 
+            'category.name as categoryName', 
+            "movements.quantity", 
+            "movements.unitPrice"
+        ])
         .execute()
 
     response.send(result);
