@@ -14,7 +14,8 @@
   <div class="container">
     <div class="header">
       <span>Gerenciamento de Estoque</span>
-      <button onclick="openModal()" id="new">Incluir</button>
+      <button onclick="openModal('product-modal')" id="new">Cadastrar Produto</button>
+      <button onclick="openModal('category-modal')" id="new">Cadastrar Categoria</button>
       <button id="employee" style="display: none;" onclick="redirectToEmployee()" id="login">Funcionários</button>
       <button onclick="logout('../index.html')">Sair</button>
     </div>
@@ -25,8 +26,11 @@
           <tr>
             <th>Produto</th>
             <th>Descrição</th>
+            <th>Categoria</th>
             <th>Quantidade</th>
-            <th>Valor Unitário (Média) </th>
+            <th>Valor Unitário (Média)</th>
+            <th class="acao">Entrada</th>
+            <th class="acao">Saida</th>
           </tr>
         </thead>
         <tbody>
@@ -34,23 +38,54 @@
       </table>
     </div>
 
-    <div class="modal-container">
+    <div id="product-modal" class="modal-container">
       <div class="modal">
         <form>
-          <label for="m-product-name">Produto</label>
-          <input id="m-product-name" type="text" required />
+          <label for="product-name">Produto</label>
+          <input id="product-name" type="text" required />
   
-          <label for="m-quantity">Descrição</label>
-          <input id="m-quantity" type="number" required />
+          <label for="description">Descrição</label>
+          <input id="description" type="text" required />
   
-          <label for="m-unit-price">Categoria</label> <br>
+          <label for="category-id">Categoria</label>
+          <br>
+          <select id="category-id" required></select>
 
-          <select name="select">
-            <option value="valor1">Valor 1</option>
-            <option value="valor2">Valor 2</option>
-            <option value="valor3">Valor 3</option>
-          </select>
-          <button id="btnSalvar">Salvar</button>
+          <button id="salvar-produto">Salvar</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="category-modal" class="modal-container">
+      <div class="modal">
+        <form>
+          <label for="category-name">Nome</label>
+          <input id="category-name" type="text" required />
+          <button id="salvar-categoria">Salvar</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="movement-modal" class="modal-container">
+      <div class="modal">
+        <form>
+          <label for="quantity">Quantidade</label>
+          <input id="quantity" type="number" required />
+
+          <label for="unit-price">Valor Unitário</label>
+          <input id="unit-price" type="number" required />
+
+          <fieldset>
+            <legend>Tipo da movimentação</legend>
+
+            <input type="radio" name="movement" value="entrada" checked />
+            <label for="huey">Entrada</label>
+
+            <input type="radio" name="movement" value="saida" disabled />
+            <label for="dewey">Saída</label>
+          </fieldset>
+          
+          <button id="salvar-movimentacao">Salvar</button>
         </form>
       </div>
     </div>

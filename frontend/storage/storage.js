@@ -1,15 +1,29 @@
-const modal = document.querySelector('.modal-container')
 const tbody = document.querySelector('tbody')
-const btnSalvar = document.querySelector('#btnSalvar')
+const sProductName = document.getElementById('product-name')
+const sDescription = document.getElementById('description')
+const sCategoryId = document.getElementById('category-id')
+const bSalvarProduto = document.getElementById("salvar-produto")
 
-const sProductName = document.querySelector('#m-product-name')
-const sQuantity = document.querySelector('#m-quantity')
-const sUnitPrice = document.querySelector('#m-unit-price')
+const sCategoryName = document.getElementById('category-name')
+const bSalvarCategoria = document.getElementById("salvar-categoria");
 
-let itens
+/** @type {NodeListOf<HTMLInputElement} */
+const iMovements = document.querySelectorAll("input[name='movement']")
+const sQuantity = document.getElementById("quantity");
+const sUnitPrice = document.getElementById("unit-price");
+const bSalvarMovimentacao = document.getElementById("salvar-movimentacao");
+
+/** @type {HTMLElement} */
+let modal
 let id
 
-function openModal(index = null) {
+/** @type {Array<any>} */
+let products
+/** @type {Array<any>} */
+let categories
+
+function openModal(id, value) {
+  modal = document.getElementById(id);
   modal.classList.add('active')
 
   modal.onclick = e => {
@@ -18,71 +32,150 @@ function openModal(index = null) {
     }
   }
 
-  if (index !== null) {
-    sProductName.value = itens[index].productName
-    sQuantity.value = itens[index].quantity
-    sUnitPrice.value = itens[index].unitPrice
-    id = itens[index].id;
-  } else {
-    sProductName.value = ''
-    sQuantity.value = ''
-    sUnitPrice.value = ''
+  switch(id) {
+    case "product-modal":
+      if (!!value) {
+        sProductName.value = products[value].name
+        sDescription.value = products[value].description
+        sCategoryId.value = products[value].categoryId
+        modal.dataset.id = products[value].id;
+      } else {
+        sProductName.value = ''
+        sDescription.value = ''
+        sCategoryId.value = ''
+      }
+      break;
+    case "category-modal":
+      sCategoryName.value = ''
+      break
+    case "movement-modal":
+      modal.dataset.index = value.index;
+      modal.dataset.type = value.type;
+      sQuantity.value = '';
+      sUnitPrice.value = ''
+
+      for (const input of iMovements) {
+        if (input.value === value.type) {
+          input.checked = true;
+          input.disabled = false;
+        } else {
+          input.checked = false;
+          input.disabled = true;
+        }
+      }
+      break
   }
 }
 
-function insertItem(item, index) {
-  let tr = document.createElement('tr')
-  tr.id = `storage-${item.id}` 
-
-  tr.innerHTML = `
-    <td>${item.productName}  <button onclick="openModal(${index})"><i class='bx bx-edit' ></i></button></td>
-    <td>${item.quantity}</td>
-    <td>R$ ${item.unitPrice}</td>
-    <td>R$ ${(item.quantity * item.unitPrice).toFixed(2)}</td>
-  `
-  tbody.appendChild(tr)
-}
-
-btnSalvar.onclick = async (e) => {
-  if (sProductName.value == '' || sQuantity.value == '' || sUnitPrice.value == '') {
+bSalvarProduto.onclick = async (e) => {
+  if (sProductName.value == '' || sDescription.value == '' || sCategoryId.value == '') {
     return
   }
 
   e.preventDefault();
 
   const data = {
-    productName: sProductName.value,
-    quantity: sQuantity.value,
-    unitPrice: sUnitPrice.value 
+    name: sProductName.value,
+    description: sDescription.value,
+    categoryId: sCategoryId.value 
   };
 
+  const id = modal.dataset.id;
   if (id !== undefined) {
-    await updateStorage(id, data)
+    await updateProduct(id, data)
   } else {
-    await createStorage(data)
+    await createProduct(data)
   }
 
-  await loadItens();
+  await loadProducts();
   modal.classList.remove('active')
-  id = undefined
+  modal.dataset.id = undefined;
 }
 
-async function loadItens() {
-  itens = await getAllStorages()
+bSalvarCategoria.onclick = async (e) => {
+  if (!sCategoryName.value) return;
+
+  e.preventDefault();
+
+  await createCategory({ name: sCategoryName.value });
+  await loadCategories();
+}
+
+bSalvarMovimentacao.onclick = async (e) => {
+  if (!sQuantity.value || !sUnitPrice.value) return;
+
+  e.preventDefault();
+
+  const data = {
+    quantity: sQuantity.value,
+    unitPrice: sUnitPrice.value,
+    type: modal.dataset.type,
+    employeeId: window.localStorage.getItem("token"),
+    productId: products[modal.dataset.index].id,
+  };
+
+  await createMovement(data);
+  await loadProducts();
+
+  modal.dataset.type = undefined;
+  modal.dataset.index = undefined;
+}
+
+async function loadProducts() {
+  products = await getAllProducts()
   tbody.innerHTML = ''
-  itens.forEach((item, index) => {
-    insertItem(item, index)
-  })
+  products.forEach((item, index) => {
+    const tr = document.createElement("tr");
+    tr.id = `product-${item.id}`;
 
+    tr.innerHTML = `
+      <td>
+        ${item.name}
+        <button onclick="openModal('product-modal', ${index})">
+          <i class='bx bx-edit' ></i>
+        </button>
+      </td>
+      <td>${item.description}</td>
+      <td>${item.categoryName}</td>
+      <td>${item.quantity}</td>
+      <td>${item.averageUnitPrice?.toFixed(2)}</td>
+      <td class="acao">
+        <button onclick="openModal('movement-modal', { index: ${index}, type: 'entrada' })">
+          <i class='bx bxs-plus-square' style="color: green;"></i>
+        </button>
+      </td>
+      <td class="acao">
+        <button onclick="openModal('movement-modal', { index: ${index}, type: 'saida' })">
+          <i class='bx bxs-minus-square' style="color: red;"></i>
+        </button>
+      </td>
+    `;
+
+    tbody.appendChild(tr);
+  })
 }
 
-async function getAllStorages () {
+async function loadCategories() {
+  categories = await getAllCategories();
+  
+  while(sCategoryId.lastElementChild)
+    sCategoryId.removeChild(sCategoryId.lastElementChild);
+
+  categories.forEach((category) => {
+    const option = document.createElement("option")
+    option.value = category.id;
+    option.textContent = category.name;
+    sCategoryId.appendChild(option);
+  });
+}
+
+async function getAllProducts () {
   const result = await fetch(`${URL}/product`);
   const data = await result.json();
   return data || [];
 }
 
-async function createStorage(item) {
+async function createProduct(item) {
   await fetch(`${URL}/product`, {
     method: "POST",
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -90,7 +183,7 @@ async function createStorage(item) {
   });
 }
 
-async function updateStorage(id, item) {
+async function updateProduct(id, item) {
   await fetch(`${URL}/product/${id}`, {
     method: "PUT",
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -98,6 +191,28 @@ async function updateStorage(id, item) {
   });
 }
 
-loadItens()
+async function getAllCategories() {
+  const result = await fetch(`${URL}/category`);
+  const data = await result.json();
+  return data || [];
+}
+
+async function createCategory(item) {
+  await fetch(`${URL}/category`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify(item),
+  });
+}
+
+async function createMovement(item) {
+  await fetch(`${URL}/movements`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify(item),
+  });
+}
 
 
+loadProducts()
+loadCategories()

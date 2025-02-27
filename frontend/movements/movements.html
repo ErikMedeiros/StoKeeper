@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movimentação</title>
+</head>
+<body>
+    <h1>Movimentações</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Funcionário</th>
+                <th>Tipo</th>
+                <th>Quantidade</th>
+                <th>Preço Unitário</th>
+                <th>Data</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script src="../index.js"></script>
+
+    <script>
+        const tbody = document.getElementsByTagName("tbody")[0];
+
+        fetch(`${URL}/movements`)
+            .then(res => res.json())
+            .then(data => {
+                for(const entry of data) {
+                    const tr = document.createElement("tr");
+                    tr.id = "movement-" + entry.id;
+
+                    tr.innerHTML = `
+                        <td>${entry.productId}</td>
+                        <td>${entry.employeeId}</td>
+                        <td>${entry.type}</td>
+                        <td>${entry.quantity}</td>
+                        <td>${entry.unitPrice}</td>
+                        <td>${new Date(entry.registeredAt).toLocaleString()}</td>
+                    `;
+
+                    tbody.appendChild(tr);
+                }
+            })
+    </script>
+</body>
+</html>

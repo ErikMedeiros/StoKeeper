@@ -71,7 +71,7 @@ router.get("/login", async (request, response) => {
 
     try {
         const user = await db.selectFrom("employee")
-            .where('name', '=', username!.toString())
+            .where('username', '=', username!.toString())
             .select(['password', 'id'])
             .executeTakeFirstOrThrow();
 

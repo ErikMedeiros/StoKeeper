@@ -7,6 +7,10 @@ export async function up(db: Kysely<any>) {
     .addColumn("name", "varchar", col => col.notNull())
     .execute();
 
+  await db.insertInto("category")
+    .values([{ name: "Limpeza" }, { name: "Alimentos" }, { name: "Eletrodomêsticos" }])
+    .execute()
+
   await db.schema
     .alterTable("product")
     .addColumn("categoryId", "integer", col => col.references("category.id").notNull())

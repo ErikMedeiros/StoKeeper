@@ -37,6 +37,7 @@ router.post("/", async (request, response) => {
 
         response.send({ movementId: movement.id });
     } catch(error) {
+        console.error(error);
         const message = "erro ao criar uma movimentação";
         response.status(500).send({ message });
     }
