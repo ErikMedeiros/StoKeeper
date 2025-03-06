@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRUD</title>
+  <title>Gerenciamento de Funcionários</title>
   <link rel="stylesheet" href="../style.css">
   <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
 </head>
@@ -13,11 +13,12 @@
 <body>
   <div class="container">
     <div class="header">
-      <span>Cadastro de Funcionários</span>
-      <!-- <button onclick="openModal()" id="new">Incluir</button> -->
-      <button onclick="redirectToStorage()" id="storage">Estoque</button>
-      <button onclick="redirectToUser()" id="storage">Cadastrar Funcionário</button>
-      <button onclick="logout('../index.html')">Sair</button>
+      <span>Gerenciamento de Funcionários</span>
+      <div>
+        <button onclick="redirectTo('../user/caduser.html')" id="new">Cadastrar Funcionário</button>
+        <button onclick="redirectTo('../storage/storage.html')" id="storage">Estoque</button>
+        <button onclick="logout('../index.html')">Sair</button>
+      </div>
     </div>
 
     <div class="divTable">
@@ -61,14 +62,6 @@
       if (value) document.querySelector("button").disabled = false;
       else window.location.href = "../index.html";
     })
-
-    function redirectToStorage() {
-      window.location.href = '../storage/storage.html';
-    }
-
-    function redirectToUser() {
-      window.location.href = "../user/caduser.html";
-    }
   </script>
   
   <script src="employee.js"></script>

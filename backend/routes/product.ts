@@ -7,8 +7,6 @@ const router = Router();
 router.post("/", async (request, response) => {
   const { name, description, categoryId } = request.body;
 
-  console.log(name, description, categoryId);
-
   try {
     const product = await db
       .insertInto("product")

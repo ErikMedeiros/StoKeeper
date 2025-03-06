@@ -80,13 +80,13 @@ async function loadItens() {
 }
 
 async function getAllEmployees () {
-  const result = await fetch(`${URL}/employee`);
+  const result = await fetch(`${BASE_URL}/employee`);
   const data = await result.json();
   return data || [];
 }
 
 async function createEmployee(item) {
-  await fetch(`${URL}/employee`, {
+  await fetch(`${BASE_URL}/employee`, {
     method: "POST",
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify(item)
@@ -94,7 +94,7 @@ async function createEmployee(item) {
 }
 
 async function updateEmployee(id, item) {
-  await fetch(`${URL}/employee/${id}`, {
+  await fetch(`${BASE_URL}/employee/${id}`, {
     method: "PUT",
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify(item)

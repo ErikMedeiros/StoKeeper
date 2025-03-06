@@ -19,7 +19,7 @@ export async function up(db: Kysely<any>) {
     .addColumn("productId", "integer", col => col.references("product.id").notNull())
     .addColumn("employeeId", "integer", col => col.references("employee.id").notNull())
     .addColumn("type", "varchar", col => col.check(sql`type in ('entrada', 'saida')`))
-    .addColumn("quantity", "integer", col => col.check(sql`quantity > 0`))
+    .addColumn("quantity", "integer")
     .addColumn("unitPrice", "real", col => col.check(sql`unitPrice > 0`))
     .addColumn("registeredAt", "integer", col => col.notNull())
     .execute()

@@ -25,6 +25,7 @@ button {
   height: 80%;
   border-radius: 10px;
   background: white;
+  overflow: hidden;
 }
 
 .header {
@@ -41,11 +42,14 @@ button {
   word-break: break-all;
 }
 
-#new {
+#new, .header button {
   font-size: 16px;
   padding: 8px;
   border-radius: 5px;
   border: none;
+}
+
+#new {
   color: white;
   background-color: rgb(57, 57, 226);
 }

@@ -43,7 +43,7 @@
       const isAdmin = document.getElementById('isAdmin').checked;
 
       if (username && password) {
-        fetch(`${URL}/employee`, {
+        fetch(`${BASE_URL}/employee`, {
           method: "POST",
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify({

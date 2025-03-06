@@ -34,7 +34,7 @@ function openModal(id, value) {
 
   switch(id) {
     case "product-modal":
-      if (!!value) {
+      if (value !== undefined || value !== null) {
         sProductName.value = products[value].name
         sDescription.value = products[value].description
         sCategoryId.value = products[value].categoryId
@@ -170,13 +170,13 @@ async function loadCategories() {
 }
 
 async function getAllProducts () {
-  const result = await fetch(`${URL}/product`);
+  const result = await fetch(`${BASE_URL}/product`);
   const data = await result.json();
   return data || [];
 }
 
 async function createProduct(item) {
-  await fetch(`${URL}/product`, {
+  await fetch(`${BASE_URL}/product`, {
     method: "POST",
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify(item)
@@ -184,7 +184,7 @@ async function createProduct(item) {
 }
 
 async function updateProduct(id, item) {
-  await fetch(`${URL}/product/${id}`, {
+  await fetch(`${BASE_URL}/product/${id}`, {
     method: "PUT",
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify(item)
@@ -192,13 +192,13 @@ async function updateProduct(id, item) {
 }
 
 async function getAllCategories() {
-  const result = await fetch(`${URL}/category`);
+  const result = await fetch(`${BASE_URL}/category`);
   const data = await result.json();
   return data || [];
 }
 
 async function createCategory(item) {
-  await fetch(`${URL}/category`, {
+  await fetch(`${BASE_URL}/category`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
     body: JSON.stringify(item),
@@ -206,7 +206,7 @@ async function createCategory(item) {
 }
 
 async function createMovement(item) {
-  await fetch(`${URL}/movements`, {
+  await fetch(`${BASE_URL}/movements`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
     body: JSON.stringify(item),
