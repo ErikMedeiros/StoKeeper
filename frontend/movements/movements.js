@@ -14,15 +14,16 @@ for (const element of [iProductName, sMovementType, sCategoryId, iStartDate, iEn
   });
 }
 
-/** @param {Date} date  */
-function formatDate(date) {
-  const year = date.getUTCFullYear();
-  const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
-  const day = date.getUTCDate().toString().padStart(2, '0');
-  const hour = date.getUTCHours().toString().padStart(2, '0');
-  const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+/** @param {string} date  */
+function formatDate(text) {
+  const date = new Date(text);
+  
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const hour = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
   const timezone = (date.getTimezoneOffset() / 60).toString().padStart(2, '0').padEnd(4, '0');
-  // "2025-03-06T15:20:00-0300";
   return `${year}-${month}-${day}T${hour}:${minutes}:00-${timezone}`;
 }
 
@@ -31,8 +32,8 @@ async function loadMovements() {
   if (iProductName.value) request.searchParams.set("name", iProductName.value);
   if (sMovementType.value) request.searchParams.set("type", sMovementType.value);
   if (sCategoryId.value) request.searchParams.set("categoryId", sCategoryId.value);
-  if (iStartDate.valueAsDate) request.searchParams.set("startDate", formatDate(iStartDate.valueAsDate));
-  if (iEndDate.valueAsDate) request.searchParams.set("endDate", formatDate(iEndDate.valueAsDate));
+  if (iStartDate.value) request.searchParams.set("startDate", formatDate(iStartDate.value));
+  if (iEndDate.value) request.searchParams.set("endDate", formatDate(iEndDate.value));
 
   const response = await fetch(request);
   const data = await response.json();
