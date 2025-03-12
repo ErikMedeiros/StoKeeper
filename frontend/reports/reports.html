@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Relatórios</title>
+
+    <style>
+        body {
+            display: grid;
+            grid-template: 1fr 1fr / 1fr 1fr;
+            gap: 2.4rem;
+        }
+    </style>
+    
+  </head>
+  <body>
+      <div><canvas id="out-products"></canvas></div>
+      <div><canvas id="categories"></canvas></div>
+      <div><canvas id="movements"></canvas></div>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"
+      integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      const data = Array.from({ length: 24 }).map((_, i) => ({
+        hour: i,
+        count: Math.round(Math.random() * 100),
+      }));
+      const data2 = Array.from({ length: 24 }).map((_, i) => ({
+        hour: i,
+        count: Math.round(Math.random() * 100),
+      }));
+
+      new Chart(document.getElementById("movements"), {
+        type: "bar",
+        data: {
+          labels: data.map((row) => row.hour),
+          datasets: [
+            { label: "Entradas por hora", data: data.map((row) => row.count) },
+            { label: "Saídas por hora", data: data2.map((row) => row.count) },
+          ],
+        },
+      });
+
+      const data3 = Array.from({ length: 5 }).map((_, i) => ({
+        name: `Produto ${i + 1}`,
+        value: Math.round(Math.random() * 100),
+      }));
+
+      new Chart(document.getElementById("out-products"), {
+        type: "bar",
+        options: { indexAxis: "y" },
+        data: {
+          labels: data3.map((row) => row.name),
+          datasets: [
+            { label: "Saída por produto", data: data3.map((row) => row.value) },
+          ],
+        },
+      });
+
+      const data4 = Array.from({ length: 10 }).map((_, i) => ({
+        name: `Categoria ${i + 1}`,
+        value: Math.round(Math.random() * 100),
+      }));
+
+      new Chart(document.getElementById("categories"), {
+        type: "bar",
+        data: {
+          labels: data4.map((row) => row.name),
+          datasets: [
+            { label: "Produto por categoria", data: data4.map((row) => row.value) },
+          ],
+        },
+      });
+    </script>
+  </body>
+</html>
