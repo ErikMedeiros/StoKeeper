@@ -126,6 +126,8 @@ bSalvarCategoria.onclick = async (e) => {
 
   await createCategory({ name: sCategoryName.value });
   await loadCategories();
+
+  modal.classList.remove("active");
 }
 
 bSalvarMovimentacao.onclick = async (e) => {
@@ -139,7 +141,7 @@ bSalvarMovimentacao.onclick = async (e) => {
     type: modal.dataset.type,
     employeeId: window.localStorage.getItem("token"),
     productId: products[modal.dataset.index].id,
-    expiresAt: formatDate(iExpiresAt.value),
+    expiresAt: isExpirable.checked ? formatDate(iExpiresAt.value) : undefined,
   };
 
   await createMovement(data);
@@ -147,6 +149,7 @@ bSalvarMovimentacao.onclick = async (e) => {
 
   modal.dataset.type = undefined;
   modal.dataset.index = undefined;
+  modal.classList.remove("active");
 }
 
 async function loadProducts() {

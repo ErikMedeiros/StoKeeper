@@ -57,7 +57,7 @@ export type MovementTable = {
   type: "entrada" | "saida";
   quantity: number;
   unitPrice: number;
-  registeredAt: ColumnType<number, number, never>;
+  registeredAt: ColumnType<Date, Date, never>;
   expiresAt?: number;
 };
 

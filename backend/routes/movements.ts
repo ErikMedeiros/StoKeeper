@@ -14,8 +14,8 @@ router.get("/", async (request, response) => {
     if (!!name) query = query.where('product.name', 'like', '%' + name + '%');
     if (type == "entrada" || type == "saida") query = query.where("type", "=", type);
     if (!!categoryId) query = query.where("product.categoryId", '=', +categoryId);
-    if (!!startDate) query = query.where("registeredAt", ">=", new Date(startDate.toString()).valueOf());
-    if (!!endDate) query = query.where("registeredAt", "<=", new Date(endDate.toString()).valueOf());
+    if (!!startDate) query = query.where("registeredAt", ">=", new Date(startDate.toString()));
+    if (!!endDate) query = query.where("registeredAt", "<=", new Date(endDate.toString()));
 
     const result = await query
       .select([
@@ -39,11 +39,11 @@ router.get("/", async (request, response) => {
 router.post("/", async (request, response) => {
     const {  productId, employeeId, type, unitPrice } = request.body;
     let { quantity, expiresAt } = request.body;
-    const registeredAt = new Date().valueOf()
+    const registeredAt = new Date()
 
     switch (type) {
       case "entrada":
-        if (!!expiresAt) expiresAt = new Date(expiresAt).valueOf();
+        if (!!expiresAt) expiresAt = new Date(expiresAt);
         else expiresAt = null;
         break;
       case "saida":

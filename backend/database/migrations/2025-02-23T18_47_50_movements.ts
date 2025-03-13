@@ -21,7 +21,7 @@ export async function up(db: Kysely<any>) {
     .addColumn("type", "varchar", col => col.check(sql`type in ('entrada', 'saida')`))
     .addColumn("quantity", "integer")
     .addColumn("unitPrice", "real", col => col.check(sql`"unitPrice" > 0`))
-    .addColumn("registeredAt", "integer", col => col.notNull())
+    .addColumn("registeredAt", "timestamp", col => col.notNull())
     .execute()
 }
 
