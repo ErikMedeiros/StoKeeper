@@ -108,10 +108,10 @@ bSalvarProduto.onclick = async (e) => {
   };
 
   const id = modal.dataset.id;
-  if (id !== undefined) {
-    await updateProduct(id, data)
+  if (id !== undefined && id !== null) {
+    await updateProduct(id, data);
   } else {
-    await createProduct(data)
+    await createProduct(data);
   }
 
   await loadProducts();

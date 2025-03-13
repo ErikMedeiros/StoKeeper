@@ -3,7 +3,7 @@ import type { Kysely } from "kysely";
 export async function up(db: Kysely<any>) {
   await db.schema
     .alterTable("product")
-    .addColumn("notifyBeforeExpiresDays", "timestamp", (col) => col.defaultTo(null))
+    .addColumn("notifyBeforeExpiresDays", "integer", (col) => col.defaultTo(null))
     .execute();
 
   await db.schema
