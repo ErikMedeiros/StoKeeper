@@ -18,12 +18,14 @@
     "better-sqlite3": "11.8.1",
     "cors": "^2.8.5",
     "express": "4.21.2",
-    "kysely": "0.27.5"
+    "kysely": "0.27.5",
+    "pg": "8.14.0"
   },
   "devDependencies": {
     "@types/better-sqlite3": "7.6.12",
     "@types/cors": "2.8.17",
     "@types/express": "5.0.0",
+    "@types/pg": "8.11.11",
     "kysely-ctl": "0.11.1",
     "ts-node": "10.9.2",
     "tsx": "4.19.3",

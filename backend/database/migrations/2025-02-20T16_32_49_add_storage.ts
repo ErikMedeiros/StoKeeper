@@ -3,10 +3,10 @@ import { Kysely } from "kysely"
 export async function up(db: Kysely<any>) {
   await db.schema
     .createTable('storage')
-    .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement())
+    .addColumn('id', 'serial', (col) => col.primaryKey())
     .addColumn('productName', 'varchar', (col) => col.notNull())
     .addColumn('quantity', 'integer', (col) => col.notNull())
-    .addColumn('unitPrice', 'real', (col) => col.notNull())
+    .addColumn('unitPrice', 'numeric', (col) => col.notNull())
     .execute()
 }
 

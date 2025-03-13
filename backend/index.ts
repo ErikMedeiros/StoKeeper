@@ -19,5 +19,5 @@ app.use("/product", ProductRoutes);
 app.use("/movements", MovementsRoutes);
 app.use("/category", CategoryRoutes);
 
-const PORT = process.env.PORT || 5000;;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`servidor rodando em http://localhost:${PORT}`))

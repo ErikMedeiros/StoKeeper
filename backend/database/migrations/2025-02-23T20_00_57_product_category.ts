@@ -3,7 +3,7 @@ import type { Kysely } from "kysely";
 export async function up(db: Kysely<any>) {
   await db.schema
     .createTable("category")
-    .addColumn("id", "integer", col => col.autoIncrement().primaryKey())
+    .addColumn("id", "serial", col => col.primaryKey())
     .addColumn("name", "varchar", col => col.notNull())
     .execute();
 

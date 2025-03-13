@@ -23,12 +23,11 @@
     </form>
   </div>
 
+  <script src="./index.js"></script>
   <script>
     if (!!localStorage.getItem("token")) {
       window.location.href = "./storage/storage.html";
     } 
-
-    const BASE_URL = "http://localhost:5000";
 
     document.getElementById('loginForm').addEventListener('submit', function(event) {
       event.preventDefault();
