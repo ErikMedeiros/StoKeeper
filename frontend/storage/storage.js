@@ -13,6 +13,23 @@ const sQuantity = document.getElementById("quantity");
 const sUnitPrice = document.getElementById("unit-price");
 const bSalvarMovimentacao = document.getElementById("salvar-movimentacao");
 
+/** @type {HTMLDivElement} */
+const notifyContainer = document.querySelector("div:has(> #notify)");
+  /** @type {HTMLInputElement} */
+const isExpirable = document.getElementById("is-expirable");
+
+isExpirable.addEventListener("change", (event) => {
+  /** @type {HTMLInputElement} */
+  const checkbox = event.target;
+  notifyContainer.style.display = checkbox.checked ? 'block' : 'none';
+})
+
+const iNotifyDays = document.getElementById("notify");
+
+/** @type {HTMLDivElement} */
+const expiresContainer = document.querySelector("div:has(> #expires-at)");
+const iExpiresAt = document.getElementById("expires-at");
+
 /** @type {HTMLElement} */
 let modal
 let id
@@ -34,15 +51,17 @@ function openModal(id, value) {
 
   switch(id) {
     case "product-modal":
-      if (value !== undefined || value !== null) {
+      if (value !== undefined && value !== null) {
         sProductName.value = products[value].name
         sDescription.value = products[value].description
         sCategoryId.value = products[value].categoryId
+        iNotifyDays.value = products[value].notifyBeforeExpiresDays;
         modal.dataset.id = products[value].id;
       } else {
         sProductName.value = ''
         sDescription.value = ''
-        sCategoryId.value = ''
+        sCategoryId.value = '';
+        iNotifyDays.value = '';
       }
       break;
     case "category-modal":
@@ -63,6 +82,13 @@ function openModal(id, value) {
           input.disabled = true;
         }
       }
+
+      const productDays = products[value.index].notifyBeforeExpiresDays;
+      if (productDays !== null && productDays !== undefined && value.type == 'entrada') {
+        expiresContainer.style.display = "block";
+      } else {
+        expiresContainer.style.display = "none";
+      }
       break
   }
 }
@@ -77,7 +103,8 @@ bSalvarProduto.onclick = async (e) => {
   const data = {
     name: sProductName.value,
     description: sDescription.value,
-    categoryId: sCategoryId.value 
+    categoryId: sCategoryId.value,
+    notify: isExpirable.checked ? iNotifyDays.value : null,
   };
 
   const id = modal.dataset.id;
@@ -112,6 +139,7 @@ bSalvarMovimentacao.onclick = async (e) => {
     type: modal.dataset.type,
     employeeId: window.localStorage.getItem("token"),
     productId: products[modal.dataset.index].id,
+    expiresAt: formatDate(iExpiresAt.value),
   };
 
   await createMovement(data);

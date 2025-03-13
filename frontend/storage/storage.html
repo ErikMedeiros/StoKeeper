@@ -8,6 +8,15 @@
   <title>Gerenciamento de Estoque</title>
   <link rel="stylesheet" href="../style.css">
   <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+
+  <style>
+    fieldset {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-around;
+    }
+
+  </style>
 </head>
 
 <body>
@@ -54,6 +63,19 @@
           <br>
           <select id="category-id" required></select>
 
+          <br>
+          <br>
+
+          <input type="checkbox" id="is-expirable"/>
+          <label for="is-expirable">Perecível</label>
+          <br>
+          <br>
+          
+          <div style="display: none;">
+            <label for="notify">Aviso antes de vencer (dias)</label>
+            <input type="number" id="notify"/>
+          </div>
+
           <button id="salvar-produto">Salvar</button>
         </form>
       </div>
@@ -80,14 +102,23 @@
 
           <fieldset>
             <legend>Tipo da movimentação</legend>
+            <div>
+              <input type="radio" name="movement" value="entrada" checked />
+              <label for="huey">Entrada</label>
+            </div>
 
-            <input type="radio" name="movement" value="entrada" checked />
-            <label for="huey">Entrada</label>
-
-            <input type="radio" name="movement" value="saida" disabled />
-            <label for="dewey">Saída</label>
+            <div>
+              <input type="radio" name="movement" value="saida" disabled />
+              <label for="dewey">Saída</label>
+            <div>
           </fieldset>
+
+          <br>
           
+          <div id="expires-at-container" style="display: none;">
+            <label for="expires-at">Data de Validade</label>
+            <input type="date" id="expires-at">
+          </div>
           <button id="salvar-movimentacao">Salvar</button>
         </form>
       </div>

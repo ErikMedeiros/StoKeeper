@@ -5,12 +5,14 @@ import { db } from "../database/index.js";
 const router = Router();
 
 router.post("/", async (request, response) => {
-  const { name, description, categoryId } = request.body;
+  const { name, description, categoryId, notify } = request.body;
+  let notifyBeforeExpiresDays: number | null = null;
+  if (notify !== null && notify !== undefined) notifyBeforeExpiresDays = +notify;
 
   try {
     const product = await db
       .insertInto("product")
-      .values({ name, description, categoryId: +categoryId })
+      .values({ name, description, categoryId: +categoryId, notifyBeforeExpiresDays })
       .returning("id")
       .executeTakeFirstOrThrow();
 
@@ -54,6 +56,7 @@ router.get("/", async (request, response) => {
       "product.id",
       "product.name",
       "product.description",
+      "product.notifyBeforeExpiresDays",
       "category.name as categoryName",
       "category.id as categoryId",
       selectFrom("movements")

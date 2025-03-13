@@ -34,6 +34,7 @@ export type ProductTable = {
     categoryId: number,
     name: string,
     description: string,
+    notifyBeforeExpiresDays: number | null,
 }
 
 export type Product = Selectable<ProductTable>;
@@ -57,6 +58,7 @@ export type MovementTable = {
     quantity: number,
     unitPrice: number,
     registeredAt: ColumnType<number, number, never>,
+    expiresAt?: number,
 }
 
 export type Movement = Selectable<MovementTable>;

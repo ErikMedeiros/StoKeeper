@@ -14,19 +14,6 @@ for (const element of [iProductName, sMovementType, sCategoryId, iStartDate, iEn
   });
 }
 
-/** @param {string} date  */
-function formatDate(text) {
-  const date = new Date(text);
-  
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
-  const hour = date.getHours().toString().padStart(2, '0');
-  const minutes = date.getMinutes().toString().padStart(2, '0');
-  const timezone = (date.getTimezoneOffset() / 60).toString().padStart(2, '0').padEnd(4, '0');
-  return `${year}-${month}-${day}T${hour}:${minutes}:00-${timezone}`;
-}
-
 async function loadMovements() {
   const request = new URL("movements", BASE_URL);
   if (iProductName.value) request.searchParams.set("name", iProductName.value);
@@ -44,6 +31,20 @@ async function loadMovements() {
   for (const entry of data) {
     const tr = document.createElement("tr");
     tr.id = "movement-" + entry.id;
+    const registeredAt = new Date(entry.registeredAt);
+    let expiresAt = null;
+    let color = null;
+
+    if (!!entry.expiresAt) {
+      expiresAt = new Date(entry.expiresAt);
+      const days = entry.notifyBeforeExpiresDays;
+      const notifyDate = new Date(expiresAt);
+      notifyDate.setDate(notifyDate.getDate() - days + 1);
+
+      if (new Date().valueOf() <= notifyDate.valueOf()) {
+        color = "lightcoral";
+      }
+    }
 
     tr.innerHTML = `
         <td>${entry.productName}</td>
@@ -52,7 +53,8 @@ async function loadMovements() {
         <td>${entry.type}</td>
         <td>${Math.abs(entry.quantity)}</td>
         <td>R$ ${entry.unitPrice.toFixed(2)}</td>
-        <td>${new Date(entry.registeredAt).toLocaleString()}</td>
+        <td>${registeredAt.toLocaleString()}</td>
+        <td ${color ? `style="color: ${color}"` : ''}>${expiresAt?.toLocaleString() ?? '-'}</td>
       `;
 
     tbody.appendChild(tr);

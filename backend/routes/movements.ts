@@ -24,8 +24,10 @@ router.get("/", async (request, response) => {
         "movements.unitPrice",
         "movements.quantity",
         "movements.registeredAt",
+        "movements.expiresAt",
         "product.id as productId",
         "product.name as productName",
+        "product.notifyBeforeExpiresDays",
         "category.name as categoryName",
         "employee.name as employeeName"
       ])
@@ -36,14 +38,23 @@ router.get("/", async (request, response) => {
 
 router.post("/", async (request, response) => {
     const {  productId, employeeId, type, unitPrice } = request.body;
-    let { quantity } = request.body;
+    let { quantity, expiresAt } = request.body;
     const registeredAt = new Date().valueOf()
 
-    if (type === "saida") quantity *= -1;
-
+    switch (type) {
+      case "entrada":
+        if (!!expiresAt) expiresAt = new Date(expiresAt).valueOf();
+        else expiresAt = null;
+        break;
+      case "saida":
+        quantity *= -1;
+        expiresAt = null;
+        break;
+    }
+    
     try {
         const movement = await db.insertInto("movements")
-            .values({ employeeId, productId, quantity, type, unitPrice, registeredAt })
+            .values({ employeeId, productId, quantity, type, unitPrice, registeredAt, expiresAt })
             .returning("id")
             .executeTakeFirstOrThrow()
 
