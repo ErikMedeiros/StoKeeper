@@ -73,7 +73,7 @@ router.post("/", async (request, response) => {
         }
 
         await db.updateTable("batch")
-          .set(eb => ({quantity: sql`${eb.ref("quantity")} + ${eb.lit(quantity)}`}))
+          .set(eb => ({quantity: eb("quantity", "+", quantity)}))
           .where('id', '=', batch.id)
           .execute();
       

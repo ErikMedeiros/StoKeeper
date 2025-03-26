@@ -79,7 +79,7 @@ function openModal(id, value) {
         sBatchId.removeChild(sBatchId.children.item(i))
       }
 
-      products[value.index].batches.forEach((batch) => {
+      products[value.index].batches?.forEach((batch) => {
         const option = document.createElement("option");
         option.value = batch.id;
         option.textContent = `Lote #${batch.id}`;
@@ -149,8 +149,11 @@ bSalvarMovimentacao.onclick = async (e) => {
 
   e.preventDefault();
 
+  const isProductExpirable = 
+    typeof products[modal.dataset.index].notifyBeforeExpiresDays === "number"
+
   const batch = products[modal.dataset.index].batches
-    .find(b => b.id === +sBatchId.value);
+    ?.find(b => b.id === +sBatchId.value);
 
   const data = {
     quantity: sQuantity.value,
@@ -158,8 +161,8 @@ bSalvarMovimentacao.onclick = async (e) => {
     type: modal.dataset.type,
     employeeId: window.localStorage.getItem("token"),
     productId: products[modal.dataset.index].id,
-    expiresAt: isExpirable.checked ? formatDate(iExpiresAt.value) : undefined,
-    batchId: batch.id,
+    expiresAt: isProductExpirable ? formatDate(iExpiresAt.value) : undefined,
+    batchId: batch?.id,
   };
 
   await createMovement(data);
