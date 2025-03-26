@@ -30,6 +30,8 @@ const iNotifyDays = document.getElementById("notify");
 const expiresContainer = document.querySelector("div:has(> #expires-at)");
 const iExpiresAt = document.getElementById("expires-at");
 
+const sBatchId = document.getElementById("batch-id");
+
 /** @type {HTMLElement} */
 let modal
 let id
@@ -72,6 +74,18 @@ function openModal(id, value) {
       modal.dataset.type = value.type;
       sQuantity.value = '';
       sUnitPrice.value = ''
+
+      for(let i = sBatchId.children.length - 1; i > 0; i -= 1) {
+        sBatchId.removeChild(sBatchId.children.item(i))
+      }
+
+      products[value.index].batches.forEach((batch) => {
+        const option = document.createElement("option");
+        option.value = batch.id;
+        option.textContent = `Lote #${batch.id}`;
+        if(!!batch.expiresAt) option.textContent += ` - ${new Date(batch.expiresAt).toLocaleDateString()}`
+        sBatchId.appendChild(option);
+      });
 
       for (const input of iMovements) {
         if (input.value === value.type) {
@@ -135,6 +149,9 @@ bSalvarMovimentacao.onclick = async (e) => {
 
   e.preventDefault();
 
+  const batch = products[modal.dataset.index].batches
+    .find(b => b.id === +sBatchId.value);
+
   const data = {
     quantity: sQuantity.value,
     unitPrice: sUnitPrice.value,
@@ -142,6 +159,7 @@ bSalvarMovimentacao.onclick = async (e) => {
     employeeId: window.localStorage.getItem("token"),
     productId: products[modal.dataset.index].id,
     expiresAt: isExpirable.checked ? formatDate(iExpiresAt.value) : undefined,
+    batchId: batch.id,
   };
 
   await createMovement(data);
@@ -169,7 +187,7 @@ async function loadProducts() {
       <td>${item.description}</td>
       <td>${item.categoryName}</td>
       <td>${item.quantity}</td>
-      <td>${item.averageUnitPrice?.toFixed(2)}</td>
+      <td>R$ ${item.averageUnitPrice?.toFixed(2)}</td>
       <td class="acao">
         <button onclick="openModal('movement-modal', { index: ${index}, type: 'entrada' })">
           <i class='bx bxs-plus-square' style="color: green;"></i>

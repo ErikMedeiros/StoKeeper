@@ -52,6 +52,7 @@ async function loadMovements() {
         <td>${entry.employeeName}</td>
         <td>${entry.type}</td>
         <td>${Math.abs(entry.quantity)}</td>
+        <td>Lote #${entry.batchId ?? ''}</td>
         <td>R$ ${entry.unitPrice.toFixed(2)}</td>
         <td>${registeredAt.toLocaleString()}</td>
         <td ${color ? `style="color: ${color}"` : ''}>${expiresAt?.toLocaleString() ?? '-'}</td>

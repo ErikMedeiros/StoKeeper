@@ -13,6 +13,7 @@ export type Database = {
   product: ProductTable;
   category: CategoryTable;
   movements: MovementTable;
+  batch: BatchTable;
 };
 
 export type EmployeeTable = {
@@ -58,12 +59,19 @@ export type MovementTable = {
   quantity: number;
   unitPrice: number;
   registeredAt: ColumnType<Date, Date, never>;
-  expiresAt?: number;
+  batchId: number;
 };
 
 export type Movement = Selectable<MovementTable>;
 export type CreateMovement = Insertable<MovementTable>;
 export type UpdateMovement = Updateable<MovementTable>;
+
+export type BatchTable = {
+  id: Generated<number>;
+  productId: number;
+  quantity: number;
+  expiresAt?: ColumnType<Date, Date, never>;
+};
 
 const dialect = new PostgresDialect({
   pool: new pg.Pool({

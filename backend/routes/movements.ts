@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { sql } from 'kysely';
 import { db } from '../database/index.js';
 
 const router = Router();
@@ -9,7 +10,8 @@ router.get("/", async (request, response) => {
       .selectFrom("movements")
       .innerJoin("product", "product.id", "movements.productId")
       .innerJoin("category", "category.id", "product.categoryId")
-      .innerJoin("employee", "employee.id", "movements.employeeId");
+      .innerJoin("employee", "employee.id", "movements.employeeId")
+      .leftJoin("batch", "batch.id", "movements.batchId");
     
     if (!!name) query = query.where('product.name', 'like', '%' + name + '%');
     if (type == "entrada" || type == "saida") query = query.where("type", "=", type);
@@ -24,7 +26,8 @@ router.get("/", async (request, response) => {
         "movements.unitPrice",
         "movements.quantity",
         "movements.registeredAt",
-        "movements.expiresAt",
+        "batch.id as batchId",
+        "batch.expiresAt",
         "product.id as productId",
         "product.name as productName",
         "product.notifyBeforeExpiresDays",
@@ -37,7 +40,7 @@ router.get("/", async (request, response) => {
 });
 
 router.post("/", async (request, response) => {
-    const {  productId, employeeId, type, unitPrice } = request.body;
+    const {  productId, employeeId, type, unitPrice, batchId } = request.body;
     let { quantity, expiresAt } = request.body;
     const registeredAt = new Date()
 
@@ -53,10 +56,31 @@ router.post("/", async (request, response) => {
     }
     
     try {
+        var batch = await db.selectFrom("batch")
+          .where("batch.id", '=', batchId)
+          .select("id")
+          .executeTakeFirst()
+
+        if (!batch) {
+          if (type === "entrada") {
+            batch = await db.insertInto("batch")
+              .values({ quantity, productId, expiresAt })
+              .returning('id')
+              .executeTakeFirstOrThrow();
+          } else {
+            throw new Error("Lote não encontrado");
+          }
+        }
+
+        await db.updateTable("batch")
+          .set(eb => ({quantity: sql`${eb.ref("quantity")} + ${eb.lit(quantity)}`}))
+          .where('id', '=', batch.id)
+          .execute();
+      
         const movement = await db.insertInto("movements")
-            .values({ employeeId, productId, quantity, type, unitPrice, registeredAt, expiresAt })
-            .returning("id")
-            .executeTakeFirstOrThrow()
+          .values({ employeeId, productId, quantity, type, unitPrice, registeredAt, batchId: batch.id })
+          .returning("id")
+          .executeTakeFirstOrThrow()
 
         response.send({ movementId: movement.id });
     } catch(error) {
