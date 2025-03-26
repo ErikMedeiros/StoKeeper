@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5000" //"https://backend-production-cec8.up.railway.app";
+const BASE_URL = "https://backend-production-cec8.up.railway.app";
 
 async function isAdmin() {
     const id = window.localStorage.getItem("token");
