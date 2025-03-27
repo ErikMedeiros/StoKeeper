@@ -82,4 +82,13 @@ router.get("/", async (request, response) => {
   response.send(result);
 });
 
+router.get("/all", async (_req, res) => {
+  const data = await db.selectFrom("product")
+    .orderBy("name", "asc")
+    .selectAll()
+    .execute();
+
+    res.send(data);
+});
+
 export default router;

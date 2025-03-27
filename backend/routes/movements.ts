@@ -89,4 +89,22 @@ router.post("/", async (request, response) => {
     }
 });
 
+router.get("/rupture", async (req, res) => {
+  const productId = +(req.query.productId ?? "0");
+  const batchId = +(req.query.batchId ?? "0");
+  const quantity = +(req.query.quantity ?? "0");
+
+  let query = db
+    .selectFrom("batch")
+    .where("productId", "=", productId)
+    .groupBy(["id", "productId"])
+    .select((eb) => eb(eb.fn.sum("quantity"), "-", quantity).as("quantity"))
+  if (!!batchId) query = query.where("id", '=', batchId);
+    
+  const data = await query.executeTakeFirst();
+
+  type Output = Exclude<typeof data, undefined>;
+  res.send(data ?? ({ quantity } satisfies Output))    
+})
+
 export default router;
