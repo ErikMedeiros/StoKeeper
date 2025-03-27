@@ -59,7 +59,7 @@ export type MovementTable = {
   quantity: number;
   unitPrice: number;
   registeredAt: ColumnType<Date, Date, never>;
-  batchId: number;
+  batchId: string;
 };
 
 export type Movement = Selectable<MovementTable>;
@@ -67,7 +67,7 @@ export type CreateMovement = Insertable<MovementTable>;
 export type UpdateMovement = Updateable<MovementTable>;
 
 export type BatchTable = {
-  id: Generated<number>;
+  id: string;
   productId: number;
   quantity: number;
   expiresAt?: ColumnType<Date, Date, never>;

@@ -31,6 +31,11 @@ const expiresContainer = document.querySelector("div:has(> #expires-at)");
 const iExpiresAt = document.getElementById("expires-at");
 
 const sBatchId = document.getElementById("batch-id");
+const sNewBatchId = document.getElementById("new-batch-id");
+
+sBatchId.addEventListener("change", (event) => {
+  document.getElementById("new-batch-container").style.display = !event.target.value ? 'block' : 'none';
+});
 
 /** @type {HTMLElement} */
 let modal
@@ -75,8 +80,15 @@ function openModal(id, value) {
       sQuantity.value = '';
       sUnitPrice.value = ''
 
-      for(let i = sBatchId.children.length - 1; i > 0; i -= 1) {
+      for(let i = sBatchId.children.length - 1; i >= 0; i -= 1) {
         sBatchId.removeChild(sBatchId.children.item(i))
+      }
+
+      if (value.type === 'entrada') {
+        const option = document.createElement("option");
+        option.value = '';
+        option.textContent = `Novo Lote`;
+        sBatchId.appendChild(option);
       }
 
       products[value.index].batches?.forEach((batch) => {
@@ -122,7 +134,7 @@ bSalvarProduto.onclick = async (e) => {
   };
 
   const id = modal.dataset.id;
-  if (id !== undefined && id !== null) {
+  if (id !== undefined && id !== null && !!id) {
     await updateProduct(id, data);
   } else {
     await createProduct(data);
@@ -152,8 +164,8 @@ bSalvarMovimentacao.onclick = async (e) => {
   const isProductExpirable = 
     typeof products[modal.dataset.index].notifyBeforeExpiresDays === "number"
 
-  const batch = products[modal.dataset.index].batches
-    ?.find(b => b.id === +sBatchId.value);
+  const batchId = products[modal.dataset.index].batches
+    ?.find(b => b.id == sBatchId.value)?.id ?? sNewBatchId.value;
 
   const data = {
     quantity: sQuantity.value,
@@ -162,7 +174,7 @@ bSalvarMovimentacao.onclick = async (e) => {
     employeeId: window.localStorage.getItem("token"),
     productId: products[modal.dataset.index].id,
     expiresAt: isProductExpirable ? formatDate(iExpiresAt.value) : undefined,
-    batchId: batch?.id,
+    batchId: batchId,
   };
 
   await createMovement(data);

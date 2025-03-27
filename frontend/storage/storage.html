@@ -121,11 +121,19 @@
             <input type="date" id="expires-at">
           </div>
 
-          <label for="batch-id">Lotes</label>
-          <br>
-          <select id="batch-id">
-            <option value="">Selecione uma opção</option>
-          </select>
+          <div style="display: grid; grid-template-columns: 1fr auto; gap: 12px;">
+            <div>
+              <label for="batch-id">Lotes</label>
+              <br>
+              <select id="batch-id" style="width: 100%; margin-top: 10px;">
+              </select>
+            </div>
+
+            <div id="new-batch-container" style="display: none;">
+              <label for="new-batch-id">Código do Lote</label>
+              <input type="text" id="new-batch-id" />
+            </div>
+          </div>
 
           <button id="salvar-movimentacao">Salvar</button>
         </form>

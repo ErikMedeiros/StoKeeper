@@ -64,7 +64,7 @@ router.post("/", async (request, response) => {
         if (!batch) {
           if (type === "entrada") {
             batch = await db.insertInto("batch")
-              .values({ quantity, productId, expiresAt })
+              .values({ id: batchId, quantity: 0, productId, expiresAt })
               .returning('id')
               .executeTakeFirstOrThrow();
           } else {
@@ -91,7 +91,7 @@ router.post("/", async (request, response) => {
 
 router.get("/rupture", async (req, res) => {
   const productId = +(req.query.productId ?? "0");
-  const batchId = +(req.query.batchId ?? "0");
+  const batchId = req.query.batchId?.toString() ?? "";
   const quantity = +(req.query.quantity ?? "0");
 
   let query = db
