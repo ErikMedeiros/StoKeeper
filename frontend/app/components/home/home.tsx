@@ -41,6 +41,13 @@ export function Home() {
   return (
     <>
       <div className={style.login__container}>
+        <img
+          src="../image/stokeeper_logo.png"
+          alt="Logo StoKeeper"
+          loading="lazy"
+          draggable="false"
+          className={style.login__container__logo}
+        />
         <h2 className={style.login__container__titulo}>Login</h2>
         <form
           id="loginForm"
