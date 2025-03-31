@@ -1,6 +1,24 @@
+import Modal from "../modal/modal";
+import { useState } from "react";
 import style from "./Storage.module.scss";
+import ProductForm from "../form/product/productForm";
+import CategoryForm from "../form/category/categoryForm";
+import MovementForm from "../form/movement/formMovement";
 
 export function Storage() {
+  const [modalType, setModalType] = useState<
+    "product" | "category" | "movement" | null
+  >(null);
+
+  const openModal = (type: "product" | "category" | "movement") =>
+    setModalType(type);
+  const closeModal = () => setModalType(null);
+
+  function Logout(href: string) {
+    window.localStorage.removeItem("token");
+    window.location.href = href;
+  }
+
   return (
     <>
       <div className={style.container}>
@@ -29,7 +47,10 @@ export function Storage() {
               Funcionários
             </button>
 
-            <button className={style.container__header__buttons_button_logout}>
+            <button
+              className={style.container__header__buttons_button_logout}
+              onClick={() => Logout(window.location.origin)}
+            >
               Sair
             </button>
           </div>
@@ -38,11 +59,17 @@ export function Storage() {
         <div className={style.conteudo}>
           <h2 className={style.conteudo__titulo}>Gerenciamento de Estoque</h2>
           <div className={style.conteudo__buttons}>
-            <button className={style.conteudo__buttons_new}>
+            <button
+              className={style.conteudo__buttons_new}
+              onClick={() => openModal("product")}
+            >
               Cadastrar Produto
             </button>
 
-            <button className={style.conteudo__buttons_new}>
+            <button
+              className={style.conteudo__buttons_new}
+              onClick={() => openModal("category")}
+            >
               Cadastrar Categoria
             </button>
           </div>
@@ -65,88 +92,32 @@ export function Storage() {
           </table>
         </div>
 
-        <div id="product-modal" className="modal-container">
-          <div className="modal">
-            <form>
-              <label htmlFor="product-name">Produto</label>
-              <input id="product-name" type="text" required />
+        {/* Modal de Produto */}
+        <Modal
+          title="Novo Produto"
+          isOpen={modalType === "product"}
+          onClose={closeModal}
+        >
+          <ProductForm />
+        </Modal>
 
-              <label htmlFor="description">Descrição</label>
-              <input id="description" type="text" required />
+        {/* Modal de Categoria */}
+        <Modal
+          title="Nova Categoria"
+          isOpen={modalType === "category"}
+          onClose={closeModal}
+        >
+          <CategoryForm />
+        </Modal>
 
-              <label htmlFor="category-id">Categoria</label>
-
-              <select id="category-id" required></select>
-
-              <input type="checkbox" id="is-expirable" />
-              <label htmlFor="is-expirable">Perecível</label>
-
-              <div>
-                <label htmlFor="notify">Aviso antes de vencer (dias)</label>
-                <input type="number" id="notify" />
-              </div>
-
-              <button id="salvar-produto">Salvar</button>
-            </form>
-          </div>
-        </div>
-
-        <div id="category-modal" className="modal-container">
-          <div className="modal">
-            <form>
-              <label htmlFor="category-name">Nome</label>
-              <input id="category-name" type="text" required />
-              <button id="salvar-categoria">Salvar</button>
-            </form>
-          </div>
-        </div>
-
-        <div id="movement-modal" className="modal-container">
-          <div className="modal">
-            <form>
-              <label htmlFor="quantity">Quantidade</label>
-              <input id="quantity" type="number" required />
-
-              <label htmlFor="unit-price">Valor Unitário</label>
-              <input id="unit-price" type="number" required />
-
-              <fieldset>
-                <legend>Tipo da movimentação</legend>
-                <div>
-                  <input type="radio" name="movement" value="entrada" checked />
-                  <label htmlFor="huey">Entrada</label>
-                </div>
-
-                <div>
-                  <input type="radio" name="movement" value="saida" disabled />
-                  <label htmlFor="dewey">Saída</label>
-                </div>
-              </fieldset>
-
-              <br />
-
-              <div id="expires-at-container">
-                <label htmlFor="expires-at">Data de Validade</label>
-                <input type="date" id="expires-at" />
-              </div>
-
-              <div>
-                <div>
-                  <label htmlFor="batch-id">Lotes</label>
-                  <br />
-                  <select id="batch-id"></select>
-                </div>
-
-                <div id="new-batch-container">
-                  <label htmlFor="new-batch-id">Código do Lote</label>
-                  <input type="text" id="new-batch-id" />
-                </div>
-              </div>
-
-              <button id="salvar-movimentacao">Salvar</button>
-            </form>
-          </div>
-        </div>
+        {/* Modal de Movimentação */}
+        <Modal
+          title="Nova Movimentação"
+          isOpen={modalType === "movement"}
+          onClose={closeModal}
+        >
+          <MovementForm />
+        </Modal>
       </div>
     </>
   );
