@@ -16,7 +16,7 @@ interface Props {
     notifyBeforeExpire: number;
   };
   categories?: Category[];
-  onSave: (id: string, item: any) => Promise<void>;
+  onSave: (item: any) => Promise<void>;
   onClose?: () => void;
 }
 
@@ -46,6 +46,7 @@ export default function ProductForm({
     e.preventDefault();
 
     const item = {
+      productID: product?.id,
       name,
       description,
       categoryId,
@@ -54,7 +55,7 @@ export default function ProductForm({
     };
 
     try {
-      await onSave(product?.id || "", item);
+      await onSave(item);
       onClose?.();
     } catch (error) {
       console.error("Erro ao salvar produto:", error);

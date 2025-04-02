@@ -54,8 +54,8 @@ export function Storage() {
     return response.json();
   };
 
-  const updateProduct = async (id: string, item: any): Promise<any> => {
-    const response = await fetch(`${BASE_URL}/product/${id}`, {
+  const updateProduct = async (item: any): Promise<any> => {
+    const response = await fetch(`${BASE_URL}/product/${item.productID}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(item),
@@ -162,44 +162,53 @@ export function Storage() {
               <th className="acao">Saida</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className={style.tabela}>
             {products.map((item, index) => (
-              <tr key={item.id}>
-                <td>
-                  {item.name}
-                  <button onClick={() => openModal("product", item)}>
-                    <i
-                      className="ri-edit-box-fill"
-                      style={{ color: "green", fontSize: "1.4rem" }}
-                    />
-                  </button>
+              <tr key={item.id} className={style.tabela__linha}>
+                <td className={style.tabela__linha__dados}>
+                  <div>
+                    {item.name}
+                    <button onClick={() => openModal("product", item)}>
+                      <i className="ri-edit-box-line" />
+                    </button>
+                  </div>
                 </td>
-                <td>{item.description}</td>
-                <td>{item.categoryName}</td>
-                <td>{item.quantity}</td>
-                <td>R$ {item.averageUnitPrice?.toFixed(2)}</td>
-                <td className="acao">
+
+                <td className={style.tabela__linha__dados}>
+                  {item.description}
+                </td>
+
+                <td className={style.tabela__linha__categoria}>
+                  {item.categoryName}
+                </td>
+
+                <td className={style.tabela__linha__quantidade}>
+                  {item.quantity}
+                </td>
+
+                <td className={style.tabela__linha__valor}>
+                  R$ {item.averageUnitPrice?.toFixed(2)}
+                </td>
+
+                <td className={style.tabela__linha__acao}>
                   <button
                     onClick={() =>
                       openModal("movement", { type: "entrada", index })
                     }
+                    className={style.tabela__linha__acao__botao_add}
                   >
-                    <i
-                      className="ri-instagram-fill"
-                      style={{ color: "green", fontSize: "1.4rem" }}
-                    ></i>
+                    <i className="ri-add-box-fill" />
                   </button>
                 </td>
-                <td className="acao">
+
+                <td className={style.tabela__linha__acao}>
                   <button
                     onClick={() =>
                       openModal("movement", { type: "saida", index })
                     }
+                    className={style.tabela__linha__acao__botao_remove}
                   >
-                    <i
-                      className="ri-instagram-fill"
-                      style={{ color: "red", fontSize: "1.4rem" }}
-                    ></i>
+                    <i className="ri-checkbox-indeterminate-fill" />
                   </button>
                 </td>
               </tr>
