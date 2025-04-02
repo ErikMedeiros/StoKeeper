@@ -1,16 +1,26 @@
 import style from "./FormMovement.module.scss";
 
 interface Props {
-  onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
+  product: any;
+  onSave: (item: any) => Promise<void>;
 }
 
-export default function MovementForm({ onSubmit }: Props) {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+export default function MovementForm({ product, onSave }: Props) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (onSubmit) {
-      onSubmit(e);
-    }
+
+    const form = e.target as HTMLFormElement;
+
+    const item = {
+      quantity: form["quantity"].value,
+      unitPrice: form["unit-price"].value,
+      movement: form["movement"].value,
+      expiresAt: form["expires-at"].value,
+    };
+
+    await onSave(item);
   };
+
   return (
     <>
       <form onSubmit={handleSubmit} className={style.form}>
@@ -50,7 +60,7 @@ export default function MovementForm({ onSubmit }: Props) {
 
         <div id="expires-at-container">
           <label htmlFor="expires-at">Data de Validade</label>
-          <input type="date" id="expires-at" />
+          <input type="date" id="expires-at" name="expires-at" />
         </div>
 
         <button>Salvar</button>
