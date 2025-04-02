@@ -5,6 +5,7 @@ import CategoryForm from "../form/category/categoryForm";
 import MovementForm from "../form/movement/formMovement";
 import { useNavigate } from "react-router";
 import style from "./Storage.module.scss";
+import { navigateTo } from "~/utils/navigateTo";
 
 export function Storage() {
   const BASE_URL = "https://backend-production-cec8.up.railway.app";
@@ -87,10 +88,6 @@ export function Storage() {
     window.location.href = href;
   };
 
-  const navigateTo = (path: string) => {
-    navigate(path);
-  };
-
   return (
     <div className={style.container}>
       <div className={style.container__header}>
@@ -104,20 +101,20 @@ export function Storage() {
         <div className={style.container__header__buttons}>
           <button
             className={style.container__header__buttons_button}
-            onClick={() => navigateTo("/stockrupture")}
+            onClick={() => navigateTo(navigate, "/stockrupture")}
           >
             Quebras
           </button>
           <button
             className={style.container__header__buttons_button}
-            onClick={() => navigateTo("/movements")}
+            onClick={() => navigateTo(navigate, "/movements")}
           >
             Movimentações
           </button>
           <button
             className={style.container__header__buttons_button}
             id="login"
-            onClick={() => navigateTo("/employee")}
+            onClick={() => navigateTo(navigate, "/employee")}
           >
             Funcionários
           </button>

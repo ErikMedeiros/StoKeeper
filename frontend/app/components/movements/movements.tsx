@@ -50,7 +50,12 @@ export function Movements() {
     });
 
     const response = await fetch(url.toString());
-    const data: Movement[] = await response.json();
+    let data: Movement[] = await response.json();
+
+    if (filters.movementType) {
+      data = data.filter((movement) => movement.type === filters.movementType);
+    }
+
     setMovements(data);
   }
 
@@ -122,6 +127,7 @@ export function Movements() {
               onChange={(e) =>
                 setFilters({ ...filters, movementType: e.target.value })
               }
+              className={style.filtros__tipo__input}
             >
               <option value="">Selecione uma opção</option>
               <option value="entrada">Entrada</option>
@@ -137,6 +143,7 @@ export function Movements() {
               onChange={(e) =>
                 setFilters({ ...filters, categoryId: e.target.value })
               }
+              className={style.filtros__categoria__input}
             >
               <option value="">Selecione uma opção</option>
               {categories.map((category) => (
@@ -156,6 +163,7 @@ export function Movements() {
               onChange={(e) =>
                 setFilters({ ...filters, startDate: e.target.value })
               }
+              className={style.filtros__data_inicio__input}
             />
           </div>
 
@@ -168,6 +176,7 @@ export function Movements() {
               onChange={(e) =>
                 setFilters({ ...filters, endDate: e.target.value })
               }
+              className={style.filtros__data_fim__input}
             />
           </div>
         </div>
@@ -187,7 +196,7 @@ export function Movements() {
                 <th>Data de Validade</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className={style.tabela}>
               {movements.map((entry) => {
                 const registeredAt = new Date(
                   entry.registeredAt
@@ -215,16 +224,39 @@ export function Movements() {
                 }
 
                 return (
-                  <tr key={entry.id} id={`movement-${entry.id}`}>
-                    <td>{entry.productName}</td>
-                    <td>{entry.categoryName}</td>
-                    <td>{entry.employeeName}</td>
-                    <td>{entry.type}</td>
-                    <td>{Math.abs(entry.quantity)}</td>
-                    <td>Lote #{entry.batchId ?? ""}</td>
-                    <td>R$ {entry.unitPrice.toFixed(2)}</td>
-                    <td>{registeredAt}</td>
-                    <td style={{ color }}>{expiresAt}</td>
+                  <tr
+                    key={entry.id}
+                    id={`movement-${entry.id}`}
+                    className={style.tabela__linha}
+                  >
+                    <td className={style.tabela__linha__dados}>
+                      {entry.productName}
+                    </td>
+                    <td className={style.tabela__linha__dados}>
+                      {entry.categoryName}
+                    </td>
+                    <td className={style.tabela__linha__dados}>
+                      {entry.employeeName}
+                    </td>
+                    <td className={style.tabela__linha__dados}>{entry.type}</td>
+                    <td className={style.tabela__linha__dados}>
+                      {Math.abs(entry.quantity)}
+                    </td>
+                    <td className={style.tabela__linha__dados}>
+                      Lote #{entry.batchId ?? ""}
+                    </td>
+                    <td className={style.tabela__linha__dados}>
+                      R$ {entry.unitPrice.toFixed(2)}
+                    </td>
+                    <td className={style.tabela__linha__dados}>
+                      {registeredAt}
+                    </td>
+                    <td
+                      className={style.tabela__linha__dados}
+                      style={{ color }}
+                    >
+                      {expiresAt}
+                    </td>
                   </tr>
                 );
               })}

@@ -1,12 +1,10 @@
 import { useNavigate } from "react-router";
 import style from "./Stockrupture.module.scss";
+import { navigateTo } from "~/utils/navigateTo";
 
 export function StockRupture() {
   const navigate = useNavigate();
 
-  const navigateTo = (path: string) => {
-    navigate(path);
-  };
   return (
     <>
       <div className={style.container}>
@@ -25,7 +23,7 @@ export function StockRupture() {
 
           <button
             className={style.container__header__button}
-            onClick={() => navigateTo("/storage")}
+            onClick={() => navigateTo(navigate, "/storage")}
           >
             Voltar
           </button>

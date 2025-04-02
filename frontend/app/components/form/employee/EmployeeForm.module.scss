@@ -1,0 +1,56 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &__label {
+    font-weight: 500;
+    color: #444444;
+    margin-bottom: -8px;
+    display: block;
+  }
+
+  &__input {
+    padding: 8px 12px;
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  &__checkbox {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    justify-content: baseline;
+
+    &_label {
+      font-weight: 500;
+      color: #444444;
+      display: block;
+    }
+  }
+
+  &__button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 15px;
+
+    &__botao_salvar {
+      background-color: #008000;
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: #ffffff;
+      cursor: pointer;
+    }
+    &__botao_cancelar {
+      background-color: #ff0000;
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: #ffffff;
+      cursor: pointer;
+    }
+  }
+}
