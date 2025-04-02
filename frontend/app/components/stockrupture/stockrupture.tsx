@@ -27,7 +27,7 @@ export function StockRupture() {
             className={style.container__header__button}
             onClick={() => navigateTo("/storage")}
           >
-            Sair
+            Voltar
           </button>
         </div>
       </div>

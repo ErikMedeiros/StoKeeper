@@ -4,4 +4,5 @@ export default [
   index("routes/home.tsx"),
   route("storage", "./routes/storage.tsx"),
   route("stockrupture", "./routes/stockrupture.tsx"),
+  route("movements", "./routes/movements.tsx"),
 ] satisfies RouteConfig;
