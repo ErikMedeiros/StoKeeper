@@ -244,6 +244,7 @@ export function Storage() {
         <MovementForm
           product={products[modalData?.index]}
           onSave={createMovement}
+          movementType={modalData?.type}
         />
       </Modal>
     </div>

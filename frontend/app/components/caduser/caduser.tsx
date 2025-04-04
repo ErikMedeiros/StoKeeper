@@ -77,20 +77,6 @@ export function CadUser() {
             <span className="text">Cadastrar</span>
           </button>
         </form>
-        <p className={style.register__container__paragrafo}>
-          Já tem uma conta?{" "}
-          <span>
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                handleLoginRedirect();
-              }}
-            >
-              Faça login
-            </a>
-          </span>
-        </p>
       </div>
     </>
   );
