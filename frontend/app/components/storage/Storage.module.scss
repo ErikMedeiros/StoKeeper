@@ -113,11 +113,18 @@
           cursor: pointer;
         }
 
-        &__botao_remove i {
-          font-weight: bold;
-          color: #ff0000;
-          font-size: 1.8rem;
+        &__botao_remove {
+          &:disabled {
+            cursor: not-allowed;
+          }
+
           cursor: pointer;
+
+          i {
+            font-weight: bold;
+            color: #ff0000;
+            font-size: 1.8rem;
+          }
         }
       }
     }

@@ -123,7 +123,8 @@ export function Storage() {
                 </td>
 
                 <td className={style.tabela__linha__acao}>
-                  <button
+                  <button 
+                    disabled={item.quantity == 0}
                     onClick={() =>
                       openModal("movement", { type: "saida", index })
                     }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import style from "./ProductForm.module.scss";
 
 interface Category {
@@ -12,8 +12,7 @@ interface Props {
     name: string;
     description: string;
     categoryId: string;
-    isExpirable: boolean;
-    notifyBeforeExpire: number;
+    notifyBeforeExpiresDays: number;
   };
   categories?: Category[];
   onSave: (item: any) => Promise<void>;
@@ -29,16 +28,14 @@ export default function ProductForm({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [categoryId, setCategoryId] = useState("");
-  const [isExpirable, setIsExpirable] = useState(false);
-  const [notifyBeforeExpire, setNotifyBeforeExpire] = useState(0);
+  const [notifyBeforeExpiresDays, setNotifyBeforeExpiresDays] = useState<number | null>(null);
 
   useEffect(() => {
     if (product) {
       setName(product.name);
       setDescription(product.description);
       setCategoryId(product.categoryId);
-      setIsExpirable(product.isExpirable);
-      setNotifyBeforeExpire(product.notifyBeforeExpire);
+      setNotifyBeforeExpiresDays(product.notifyBeforeExpiresDays);
     }
   }, [product]);
 
@@ -50,8 +47,7 @@ export default function ProductForm({
       name,
       description,
       categoryId,
-      isExpirable,
-      notifyBeforeExpire: isExpirable ? notifyBeforeExpire : null,
+      notifyBeforeExpiresDays,
     };
 
     try {
@@ -114,15 +110,15 @@ export default function ProductForm({
           type="checkbox"
           id="is-expirable"
           className={style.form__checkbox__input}
-          checked={isExpirable}
-          onChange={(e) => setIsExpirable(e.target.checked)}
+          checked={notifyBeforeExpiresDays!== null}
+          onChange={(e) => setNotifyBeforeExpiresDays(e.target.checked ? 5 : null)}
         />
         <label htmlFor="is-expirable" className={style.form__checkbox__label}>
           Perecível
         </label>
       </div>
 
-      {isExpirable && (
+      {notifyBeforeExpiresDays !== null && (
         <div className={style.form__number}>
           <label htmlFor="notify" className={style.form__number__label}>
             Aviso antes de vencer (dias)
@@ -131,8 +127,8 @@ export default function ProductForm({
             type="number"
             id="notify"
             className={style.form__number__input}
-            value={notifyBeforeExpire}
-            onChange={(e) => setNotifyBeforeExpire(Number(e.target.value))}
+            value={notifyBeforeExpiresDays || ''}
+            onChange={(e) => setNotifyBeforeExpiresDays(Number(e.target.value))}
           />
         </div>
       )}
