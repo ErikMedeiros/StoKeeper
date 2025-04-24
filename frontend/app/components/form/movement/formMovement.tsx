@@ -23,8 +23,8 @@ export default function MovementForm({ product, onSave, movementType }: Props) {
       expiresAt: null,
     };
 
-    if (movementType === "entrada") {
-      item.expiresAt = form["expires-at"].value;
+    if (movementType === "entrada" && product.notifyBeforeExpiresDays !== null) {
+      item.expiresAt = form["expires-at"]?.value ?? null;
     }
 
     await onSave(item);
@@ -84,7 +84,7 @@ export default function MovementForm({ product, onSave, movementType }: Props) {
           </div>
         </fieldset>
 
-        {movementType === "entrada" && (
+        {movementType === "entrada" && product.notifyBeforeExpiresDays !== null && (
           <>
             <label htmlFor="expires-at" className={style.form__label}>
               Data de Validade
@@ -104,7 +104,7 @@ export default function MovementForm({ product, onSave, movementType }: Props) {
               Lotes
             </label>
             <select
-              id="batch-id"
+              id={newBatch ? undefined : "batch-id"}
               name={newBatch ? undefined : "batch-id"}
               className={style.form__lote__input}
               required
