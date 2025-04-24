@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
 import * as backend from "../../backend";
 import CategoryForm from "../form/category/categoryForm";
 import MovementForm from "../form/movement/formMovement";
@@ -33,6 +32,7 @@ export function Storage() {
   async function createMovement(item: unknown) {
     await backend.createMovement(item);
     setProducts(await backend.getProducts());
+    closeModal();
   }
 
   useEffect(() => {

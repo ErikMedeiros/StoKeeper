@@ -1,3 +1,4 @@
+import { useState } from "react";
 import style from "./FormMovement.module.scss";
 
 interface Props {
@@ -12,12 +13,14 @@ export default function MovementForm({ product, onSave, movementType }: Props) {
 
     const form = e.target as HTMLFormElement;
 
-    const item: any = {
-      quantity: form["quantity"].value,
-      unitPrice: form["unit-price"].value,
-      movement: movementType,
-      batchId:
-        form["batch-id"].value === "novo" ? null : form["batch-id"].value,
+    const item = {
+      productId: product.id,
+      employeeId: +window.localStorage.getItem("token")!,
+      quantity: form["quantity"].valueAsNumber,
+      unitPrice: form["unit-price"].valueAsNumber,
+      type: movementType,
+      batchId: form["batch-id"].value,
+      expiresAt: null,
     };
 
     if (movementType === "entrada") {
@@ -28,6 +31,7 @@ export default function MovementForm({ product, onSave, movementType }: Props) {
   };
 
   const existingBatches = product?.batches || [];
+  const [newBatch, setNewBatch] = useState(movementType === "entrada");
 
   return (
     <>
@@ -101,9 +105,10 @@ export default function MovementForm({ product, onSave, movementType }: Props) {
             </label>
             <select
               id="batch-id"
-              name="batch-id"
+              name={newBatch ? undefined : "batch-id"}
               className={style.form__lote__input}
               required
+              onChange={(e) => setNewBatch(e.target.value === "novo")}
             >
               {movementType === "entrada" && (
                 <option value="novo">Novo Lote</option>
@@ -116,6 +121,16 @@ export default function MovementForm({ product, onSave, movementType }: Props) {
                 </option>
               ))}
             </select>
+
+            {newBatch && (
+              <input
+                type="text"
+                name="batch-id"
+                id="batch-id"
+                style={{ marginTop: "8px" }}
+                className={style.form__input}
+              />
+            )}
           </div>
         </div>
 
