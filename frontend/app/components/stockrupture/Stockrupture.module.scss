@@ -1,0 +1,113 @@
+.corpo {
+  margin: 0;
+  padding: 4px;
+  display: grid;
+  column-gap: 12px;
+  grid-template-rows: 0.125fr;
+  grid-template-columns: minmax(25%, 1fr) 1fr 1fr;
+  grid-template-areas:
+    "heading heading heading"
+    "form    table   table";
+
+  form {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: white;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    flex: 1;
+    gap: 12px;
+    grid-area: form;
+  }
+
+  label {
+    display: block;
+    font-weight: bold;
+    color: #333;
+  }
+
+  label:has(+ *:required)::after {
+    content: "*";
+    padding-left: 8px;
+    color: red;
+  }
+
+  select,
+  input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+  button {
+    padding: 12px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+  }
+
+  button:hover {
+    background-color: #2980b9;
+  }
+
+  input:focus,
+  select:focus,
+  button:focus {
+    border-color: #3498db;
+    outline: none;
+  }
+
+  textarea {
+    resize: none;
+    flex: 1;
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  div:has(> div > table) {
+    background-color: white;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+    grid-area: table;
+    padding: 20px;
+  }
+
+  table {
+    text-align: center;
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    position: sticky;
+    inset: 0;
+    background-color: white;
+  }
+
+  :is(td, th) {
+    padding: 8px;
+  }
+
+  :is(td, th):nth-child(n + 2) {
+    border-left: 1px solid #ccc;
+  }
+
+  :is(td, th):last-of-type {
+    width: 50%;
+  }
+
+  tr:nth-child(2n) {
+    background-color: gainsboro;
+  }
+}
