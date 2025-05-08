@@ -8,6 +8,7 @@
   grid-template-areas:
     "heading heading heading"
     "form    table   table";
+  height: 100%;
 
   form {
     display: flex;
@@ -101,10 +102,6 @@
 
   :is(td, th):nth-child(n + 2) {
     border-left: 1px solid #ccc;
-  }
-
-  :is(td, th):last-of-type {
-    width: 50%;
   }
 
   tr:nth-child(2n) {

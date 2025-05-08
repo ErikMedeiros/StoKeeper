@@ -51,6 +51,11 @@ export type Category = Selectable<CategoryTable>;
 export type CreateCategory = Insertable<CategoryTable>;
 export type UpdateCategory = Updateable<CategoryTable>;
 
+export type MovementCategory = {
+  id: Generated<number>;
+  title: string;
+};
+
 export type MovementTable = {
   id: Generated<number>;
   productId: number;
@@ -60,6 +65,7 @@ export type MovementTable = {
   unitPrice: number;
   registeredAt: ColumnType<Date, Date, never>;
   batchId: string;
+  comment?: string;
 };
 
 export type Movement = Selectable<MovementTable>;
@@ -75,7 +81,7 @@ export type BatchTable = {
 
 const dialect = new PostgresDialect({
   pool: new pg.Pool({
-    connectionString: process.env.DATABASE_URL
+    connectionString: process.env.DATABASE_URL,
   }),
 });
 

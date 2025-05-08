@@ -39,7 +39,7 @@ export default function Layout() {
             Funcionários
           </NavLink>
           <NavLink to="stockrupture" className={className}>
-            Quebra de Estoque
+            Inventário
           </NavLink>
           <NavLink to="reports" className={className}>
             Relatórios

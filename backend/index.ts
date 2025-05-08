@@ -5,7 +5,7 @@ import ProductRoutes from "./routes/product.js";
 import MovementsRoutes from "./routes/movements.js";
 import CategoryRoutes from "./routes/category.js";
 import BatchRoutes from "./routes/batch.js";
-import StockRupture from "./routes/stock rupture.js";
+import StockRupture from "./routes/stockrupture.js";
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
