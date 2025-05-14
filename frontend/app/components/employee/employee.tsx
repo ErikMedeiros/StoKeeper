@@ -58,7 +58,7 @@ export function Employee() {
   };
 
   return (
-    <>
+    <div>
       {isAdmin && (
         <div className="flex flex-row-reverse px-4 pt-4">
           <button
@@ -148,6 +148,6 @@ export function Employee() {
           />
         </Modal>
       )}
-    </>
+    </div>
   );
 }

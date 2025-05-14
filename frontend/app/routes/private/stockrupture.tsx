@@ -12,7 +12,7 @@ export default function StockRupture(props: Route.ComponentProps) {
   const { products } = props.loaderData;
 
   const [productIndex, setProductIndex] = useState(0);
-  const [batchIndex, setBatchIndex] = useState(0);
+  const [batchId, setBatchId] = useState("");
   const [entries, setEntries] = useState<any[]>([]);
 
   function handleOnSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -20,28 +20,40 @@ export default function StockRupture(props: Route.ComponentProps) {
 
     const quantity = +event.currentTarget.quantidade.value;
     const comment: string = event.currentTarget.comentario.value;
+    const expiresAtRaw: string = event.currentTarget["expires-at"]?.value;
+    const expiresAt = expiresAtRaw ? `${expiresAtRaw}T00:00:00-03:00` : null;
 
     setEntries((prev) => {
       const output = [...prev];
       const index = output.findIndex(
-        (e) => e.productIndex === productIndex && e.batchIndex === batchIndex
+        (e) => e.productIndex === productIndex && e.batchId === batchId
       );
 
       if (index !== -1) {
         output[index].quantity = quantity;
         output[index].comment = comment;
+        output[index].expiresAt = expiresAt;
       } else {
-        output.push({ productIndex, batchIndex, quantity, comment });
+        output.push({ productIndex, batchId, expiresAt, quantity, comment });
       }
 
       return output;
     });
+
+    event.currentTarget.reset();
+    setBatchId("");
   }
+
+  const isNewBatch =
+    products[productIndex].batches?.every((b: any) => b.id !== batchId) ?? true;
 
   return (
     <>
       <div className={style.corpo}>
-        <form className="h-full" onSubmit={handleOnSubmit}>
+        <form
+          onSubmit={handleOnSubmit}
+          className="h-full border-2 border-gray-300 rounded-sm p-4 flex flex-col gap-2"
+        >
           <label htmlFor="produto">Produto</label>
           <select
             id="produto"
@@ -49,7 +61,7 @@ export default function StockRupture(props: Route.ComponentProps) {
             value={productIndex}
             onChange={(e) => {
               setProductIndex(+e.target.value);
-              setBatchIndex(-1);
+              setBatchId("");
             }}
           >
             {products.map((product: any, index: number) => (
@@ -59,22 +71,45 @@ export default function StockRupture(props: Route.ComponentProps) {
             ))}
           </select>
 
-          <label htmlFor="lote">Lote</label>
+          <label htmlFor="lote">
+            Lote <span className="text-red-500">*</span>
+          </label>
           <select
-            id="lote"
-            value={batchIndex}
-            onChange={(e) => setBatchIndex(+e.target.value)}
+            id={isNewBatch ? undefined : "lote"}
+            value={batchId}
+            onChange={(e) => setBatchId(e.target.value)}
           >
-            <option value="-1">Novo Lote</option>
+            <option value="">Novo Lote</option>
 
-            {(products[productIndex].batches ?? []).map(
-              (batch: any, index: number) => (
-                <option key={batch.id} value={index}>
-                  Lote #{batch.id}
+            {(products[productIndex].batches ?? []).map((batch: any) => {
+              const expiresAt =
+                (batch.expiresAt &&
+                  ` - ${new Date(batch.expiresAt).toLocaleDateString()}`) ??
+                "";
+              return (
+                <option key={batch.id} value={batch.id}>
+                  Lote #{batch.id} {expiresAt}
                 </option>
-              )
-            )}
+              );
+            })}
           </select>
+          {isNewBatch && (
+            <input
+              type="text"
+              id={isNewBatch ? "lote" : undefined}
+              value={batchId}
+              onChange={(e) => setBatchId(e.target.value)}
+              required
+            />
+          )}
+
+          {products[productIndex].notifyBeforeExpiresDays !== null &&
+            isNewBatch && (
+              <>
+                <label htmlFor="expires-at">Data de Validade</label>
+                <input type="date" id="expires-at" name="expires-at" required />
+              </>
+            )}
 
           <label htmlFor="quantidade">Quantidade</label>
           <input type="number" name="quantidade" id="quantidade" required />
@@ -86,11 +121,11 @@ export default function StockRupture(props: Route.ComponentProps) {
             className="p-2 border-[1px] border-[#ccc] rounded-sm"
           ></textarea>
 
-          <button type="submit">Registrar Quebra</button>
+          <button type="submit">Adicionar</button>
         </form>
 
-        <div>
-          <div>
+        <div className="h-full flex flex-col gap-2 overflow-x-hidden">
+          <div className="overflow-x-auto">
             <table>
               <thead>
                 <tr>
@@ -105,14 +140,27 @@ export default function StockRupture(props: Route.ComponentProps) {
               <tbody>
                 {entries.map((entry) => {
                   const product = products[entry.productIndex];
-                  const batch = product.batches?.[entry.batchIndex];
+                  const batch = product.batches?.find(
+                    (b: any) => b.id === entry.batchId
+                  );
+
+                  let expiresAt = "";
+                  if (batch?.expiresAt) {
+                    const date = new Date(batch.expiresAt).toLocaleDateString();
+                    expiresAt = ` - ${date}`;
+                  } else if (entry.expiresAt) {
+                    const date = new Date(entry.expiresAt).toLocaleDateString();
+                    expiresAt = ` - ${date}`;
+                  }
 
                   return (
-                    <tr key={`${product.id}_${batch.id}`}>
+                    <tr key={`${product.id}_${entry.batchId}`}>
                       <td>{product.name}</td>
-                      <td>Lote #{batch.id}</td>
+                      <td>
+                        Lote #{entry.batchId} {expiresAt}
+                      </td>
                       <td>{entry.quantity}</td>
-                      <td>{entry.quantity - batch.quantity}</td>
+                      <td>{entry.quantity - (batch?.quantity ?? 0)}</td>
                       <td>{entry.comment || "-"}</td>
                     </tr>
                   );
@@ -121,7 +169,9 @@ export default function StockRupture(props: Route.ComponentProps) {
             </table>
           </div>
 
-          <button type="submit">Salvar</button>
+          <button type="submit" className="mt-auto">
+            Salvar
+          </button>
         </div>
       </div>
     </>

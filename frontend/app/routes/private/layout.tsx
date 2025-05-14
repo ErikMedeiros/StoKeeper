@@ -18,7 +18,7 @@ export default function Layout() {
     "bg-gray-100 rounded-md py-2 px-3 [&.active]:bg-blue-800 [&.active]:text-white [&.active]:font-bold transition-transform duration-150 hover:scale-110";
 
   return (
-    <div className="bg-white overflow-hidden h-screen max-w-full flex flex-col">
+    <div className="bg-white h-screen max-w-full grid grid-rows-[80px_10fr]">
       <nav className="flex gap-4 justify-between items-center px-7 py-3 border-b-2 border-b-gray-400">
         <img
           src="../image/stokeeper_logo.png"
