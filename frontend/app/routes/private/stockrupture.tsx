@@ -37,7 +37,14 @@ export default function StockRupture(props: Route.ComponentProps) {
         output[index].expiresAt = expiresAt;
         output[index].unitPrice = unitPrice;
       } else {
-        output.push({ productIndex, batchId, unitPrice, expiresAt, quantity, comment });
+        output.push({
+          productIndex,
+          batchId,
+          unitPrice,
+          expiresAt,
+          quantity,
+          comment,
+        });
       }
 
       return output;
@@ -61,6 +68,10 @@ export default function StockRupture(props: Route.ComponentProps) {
 
       setLoading(true);
       await backend.postStockRupture(employeeId, data);
+      alert("Inventário atualizado com sucesso");
+      setEntries([]);
+    } catch (error) {
+      alert("Erro ao atualizar o inventário");
     } finally {
       setLoading(false);
     }
