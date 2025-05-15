@@ -14,12 +14,14 @@ export default function StockRupture(props: Route.ComponentProps) {
   const [productIndex, setProductIndex] = useState(0);
   const [batchId, setBatchId] = useState("");
   const [entries, setEntries] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
   function handleOnSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const quantity = +event.currentTarget.quantidade.value;
     const comment: string = event.currentTarget.comentario.value;
+    const unitPrice: number = +event.currentTarget.unitPrice.value;
     const expiresAtRaw: string = event.currentTarget["expires-at"]?.value;
     const expiresAt = expiresAtRaw ? `${expiresAtRaw}T00:00:00-03:00` : null;
 
@@ -33,8 +35,9 @@ export default function StockRupture(props: Route.ComponentProps) {
         output[index].quantity = quantity;
         output[index].comment = comment;
         output[index].expiresAt = expiresAt;
+        output[index].unitPrice = unitPrice;
       } else {
-        output.push({ productIndex, batchId, expiresAt, quantity, comment });
+        output.push({ productIndex, batchId, unitPrice, expiresAt, quantity, comment });
       }
 
       return output;
@@ -42,6 +45,25 @@ export default function StockRupture(props: Route.ComponentProps) {
 
     event.currentTarget.reset();
     setBatchId("");
+  }
+
+  async function submit() {
+    try {
+      const employeeId = +window.localStorage.getItem("token")!;
+      const data = entries.map((p) => ({
+        productId: products[p.productIndex].id,
+        batchId: p.batchId,
+        quantity: p.quantity,
+        expiresAt: p.expiresAt,
+        unitPrice: p.unitPrice,
+        comment: p.comment,
+      }));
+
+      setLoading(true);
+      await backend.postStockRupture(employeeId, data);
+    } finally {
+      setLoading(false);
+    }
   }
 
   const isNewBatch =
@@ -114,6 +136,9 @@ export default function StockRupture(props: Route.ComponentProps) {
           <label htmlFor="quantidade">Quantidade</label>
           <input type="number" name="quantidade" id="quantidade" required />
 
+          <label htmlFor="unit-price">Valor Unitário</label>
+          <input type="number" name="unitPrice" id="unitPrice" required />
+
           <label htmlFor="comentario">Comentário</label>
           <textarea
             name="comentario"
@@ -121,7 +146,9 @@ export default function StockRupture(props: Route.ComponentProps) {
             className="p-2 border-[1px] border-[#ccc] rounded-sm"
           ></textarea>
 
-          <button type="submit">Adicionar</button>
+          <button type="submit" disabled={loading}>
+            Adicionar
+          </button>
         </form>
 
         <div className="h-full flex flex-col gap-2 overflow-x-hidden">
@@ -169,7 +196,7 @@ export default function StockRupture(props: Route.ComponentProps) {
             </table>
           </div>
 
-          <button type="submit" className="mt-auto">
+          <button className="mt-auto" disabled={loading} onClick={submit}>
             Salvar
           </button>
         </div>

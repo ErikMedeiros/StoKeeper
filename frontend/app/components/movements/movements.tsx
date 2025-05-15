@@ -15,6 +15,7 @@ interface Movement {
   registeredAt: string;
   expiresAt?: string;
   notifyBeforeExpiresDays?: number;
+  comment?: string;
 }
 
 interface Category {
@@ -55,7 +56,7 @@ export function Movements() {
   }, []);
 
   return (
-    <>
+    <div>
       <div className={style.filtros}>
         <div className={style.filtros__produto}>
           <label
@@ -180,6 +181,7 @@ export function Movements() {
                   key={entry.id}
                   id={`movement-${entry.id}`}
                   className={style.tabela__linha}
+                  title={entry.comment ?? undefined}
                 >
                   <td className={style.tabela__linha__dados}>
                     {entry.productName}
@@ -210,6 +212,6 @@ export function Movements() {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 }

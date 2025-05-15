@@ -111,3 +111,14 @@ export async function updateEmployee(id: string, item: unknown) {
   });
   return response.json();
 }
+
+export async function postStockRupture(employeeId: number, data: any[]) {
+  const url = new URL("/stockrupture?employeeId=" + employeeId, BASE_URL);
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  return response.json();
+}

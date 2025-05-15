@@ -51,7 +51,7 @@ export function Storage() {
   };
 
   return (
-    <>
+    <div>
       <div className={style.conteudo}>
         <div className={style.conteudo__buttons}>
           <button
@@ -123,7 +123,7 @@ export function Storage() {
                 </td>
 
                 <td className={style.tabela__linha__acao}>
-                  <button 
+                  <button
                     disabled={item.quantity == 0}
                     onClick={() =>
                       openModal("movement", { type: "saida", index })
@@ -172,6 +172,6 @@ export function Storage() {
           movementType={modalData?.type}
         />
       </Modal>
-    </>
+    </div>
   );
 }
