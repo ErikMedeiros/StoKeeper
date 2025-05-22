@@ -59,10 +59,16 @@ router.get("/", async (request, response) => {
       "product.notifyBeforeExpiresDays",
       "category.name as categoryName",
       "category.id as categoryId",
-      selectFrom("batch")
-        .whereRef("batch.productId", "=", "product.id")
-        .where("batch.quantity", ">", 0)
-        .select(eb => eb.fn.jsonAgg("batch").as("batches"))
+      selectFrom("movements")
+        .whereRef("movements.productId", "=", "product.id")
+        .groupBy(["movements.batchId", "movements.productId"])
+        .having(({ fn: { sum } }) => sum("quantity"), ">", 0)
+        .select(({ selectFrom }) =>
+          selectFrom("batch")
+            .whereRef("batch.id", "=", "movements.batchId")
+            .select((eb) => eb.fn.jsonAgg("batch").as("batches"))
+            .as("batches")
+        )
         .as("batches"),
       selectFrom("movements")
         .whereRef("productId", "=", "product.id")
